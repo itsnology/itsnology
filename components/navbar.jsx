@@ -55,7 +55,7 @@ export default () => {
   return (
     <header className="text-base lg:text-sm">
       <div
-        className={`bg-white items-center gap-x-14 px-4 max-w-screen-xl mx-auto md:px-8 lg:flex lg:static ${
+        className={` items-center gap-x-14 px-4 max-w-screen-xl mx-auto md:px-8 lg:flex lg:static ${
           state ? "h-full fixed inset-x-0" : ""
         }`}
       >
