@@ -13,17 +13,21 @@ const AvatarMenu = () => {
       if (!profileRef.current.contains(e.target)) setState(false);
     };
     document.addEventListener("click", handleDropDown);
+
+    return () => {
+      document.removeEventListener("click", handleDropDown);
+    };
   }, []);
 
   return (
     <div className="relative lg:border-none">
       <div className="flex flex-row items-center">
-        <button className="bg-blue-100 py-3 px-4  rounded-full me-4">
+        <button className="bg-blue-100 py-3 px-4 rounded-full me-4">
           <Image src={Bag} />
         </button>
         <button
           ref={profileRef}
-          className="w-fit bg-sky-500 px-4 py-1 text-gray-100 h-10 outline-none rounded-full lg:block"
+          className="w-fit bg-sky-500 px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
           onClick={() => setState(!state)}
         >
           تسجيل الدخول
@@ -50,9 +54,7 @@ const Header = () => {
   return (
     <header className="text-base lg:text-sm">
       <div
-        className={`bg-slate-50 items-center gap-x-14 px-4 max-w-screen-xl mx-auto md:px-8 lg:flex lg:static ${
-          state ? "h-full fixed inset-x-0" : ""
-        }`}
+        className={`bg-slate-50 items-center gap-x-14 px-4 max-w-screen-xl mx-auto md:px-8 lg:flex lg:static`}
       >
         <div className="flex items-center justify-between pt-1 lg:block">
           <a href="javascript:void(0)">
@@ -94,11 +96,11 @@ const Header = () => {
           </div>
         </div>
         <div
-          className={`nav-menu flex-1 pb-28 mt-8 overflow-y-auto max-h-screen lg:block lg:overflow-visible lg:pb-0 lg:mt-0 ${
+          className={`nav-menu flex-1 pb-4 mt-8 overflow-y-auto max-h-screen lg:block lg:overflow-visible lg:pb-0 lg:mt-0 ${
             state ? "" : "hidden"
           }`}
         >
-          <ul className="items-center space-y-6 lg:flex lg:space-x-6 lg:space-x-reverse lg:space-y-0">
+          <ul className="items-center space-y-6 lg:flex lg:space-x-4 lg:space-x-reverse lg:space-y-0">
             <form
               onSubmit={(e) => e.preventDefault()}
               className="flex-1 w-full items-center justify-start lg:me-12"
@@ -109,7 +111,7 @@ const Header = () => {
                   placeholder="البحث عن..."
                   className="px-2 py-2 text-gray-500 bg-transparent rounded-md outline-none"
                 />
-                <div className="flex flex-row items-center text-gray-600 w-fit">
+                <div className="flex flex-row items-center whitespace-nowrap text-gray-600 w-fit">
                   جميع الفئات
                   <button onClick={() => setState(!state)}>
                     <svg
@@ -144,7 +146,7 @@ const Header = () => {
             >
               <a
                 href={item.path}
-                className={`block w-28 py-2 px-3 rounded-lg text-gray-700 hover:text-sky-500 focus:text-sky-500 duration-150 ${
+                className={`block  whitespace-nowrap py-2 px-3 rounded-lg text-gray-700 hover:text-sky-500 focus:text-sky-500 duration-150 ${
                   idx === 0
                     ? "w-fit text-sky-500 border-sky-600 underline underline-offset-8 decoration-[1.5px]"
                     : ""
