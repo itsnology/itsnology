@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 /*           fonts          */
-
-body {
-  background-color: #f6f9fc;
+@font-face {
+   font-family: global;
+   src: url("/SST Arabic Roman.ttf");
+}
+main {
+   background-color: #f6f9fc;
+   font-family: global;
 }
