@@ -1,5 +1,5 @@
 import Image from "next/image";
 
 export default function Home() {
-   return <main className=" bggradient ">hello there hahaha </main>;
+   return <main className=" ">hello there hahaha </main>;
 }
