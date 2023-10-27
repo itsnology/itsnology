@@ -12,6 +12,8 @@
     "blaze-slider": "^1.9.3",
     "keen-slider": "^6.8.6",
     "next": "^14.0.0",
+    "@tabler/icons-react": "^2.40.0",
+    "next": "14.0.0",
     "react": "^18",
     "react-dom": "^18"
   },
