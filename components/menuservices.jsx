@@ -75,14 +75,14 @@ const MenuService = () => {
    }, []);
 
    return (
-      <div>
+      <div className=" mb-16">
          <h1
-            className="text-4xl font-bold  mt-4 mb-4 text-center text-blue-500"
+            className="text-4xl font-bold  mt-16 mb-4 text-center text-blue-500"
             id="menu"
          >
             الخدمات التي نقدمها
          </h1>
-         <h4 className="text-xl font-semibold mb-8 text-center">
+         <h4 className="text-xl font-semibold mb-8 text-center text-black/40">
             أنقر على الخدمة لتتمتع بعروضنا
          </h4>
          {isLoading ? (
