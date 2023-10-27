@@ -94,10 +94,10 @@ const MenuService = () => {
                ))}
             </div>
          ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 px-4">
                {data.map((item) => (
                   <div
-                     className="flex flex-col items-center justify-between h-full p-4 rounded-lg shadow-lg bg-white hover:shadow-xl "
+                     className="flex flex-col items-center justify-between h-full p-4 rounded-lg shadow-lg bg-white hover:shadow-2xl  "
                      key={item.id}
                   >
                      <Link href={`${item.url}`}>
@@ -110,7 +110,7 @@ const MenuService = () => {
                         />
                      </Link>
                      <button className=" py-2 px-8 sm:px-6 mt-4 text-white bg-blue-500 rounded-full hover:bg-blue-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
-                        <Link href={`/${item.url}`}>أطلب الآن</Link>
+                        <Link href={`${item.url}`}>أطلب الآن</Link>
                      </button>
                   </div>
                ))}
