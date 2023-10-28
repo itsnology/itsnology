@@ -7,6 +7,7 @@ import MenuService from "@components/menuservices";
 import Rating from "@components/rating";
 
 import FirstDisc from "@components/firstDisc";
+import Popup from "@components/popup";
 export default function Home() {
   return (
     <main className=" ">
@@ -15,8 +16,7 @@ export default function Home() {
       <FirstDisc />
       <FirstPage2 />
       <MenuService />
-         <Rating />
-
+      <Rating />
     </main>
   );
 }
