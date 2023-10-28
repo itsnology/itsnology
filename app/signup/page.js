@@ -48,9 +48,16 @@ export default function Register() {
 
          {/* form */}
          <form
-            className="bg-white shadow-md rounded px-16 pt-6 pb-8 mb-4"
+            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full sm:w-3/4"
             onSubmit={formik.handleSubmit}
          >
+            {" "}
+            <label
+               className="block text-gray-700 font-bold mb-2"
+               htmlFor="username"
+            >
+               الإسم بالكامل
+            </label>
             <div
                className={`${styles.input_group} ${
                   formik.errors.username && formik.touched.username
@@ -58,12 +65,6 @@ export default function Register() {
                      : ""
                }`}
             >
-               <label
-                  className="block text-gray-700 font-bold mb-2"
-                  htmlFor="username"
-               >
-                  الإسم بالكامل
-               </label>
                <input
                   type="text"
                   name="Username"
@@ -75,7 +76,17 @@ export default function Register() {
                   <HiOutlineUser size={25} />
                </span>
             </div>
-            {/* {formik.errors.username && formik.touched.username ? <span className='text-rose-500'>{formik.errors.username}</span> : <></>} */}
+            {formik.errors.username && formik.touched.username ? (
+               <span className="text-rose-500">{formik.errors.username}</span>
+            ) : (
+               <></>
+            )}
+            <label
+               className="block text-gray-700 font-bold mb-2"
+               htmlFor="email"
+            >
+               البريد الإلكتروني
+            </label>
             <div
                className={`${styles.input_group} ${
                   formik.errors.email && formik.touched.email
@@ -83,12 +94,6 @@ export default function Register() {
                      : ""
                }`}
             >
-               <label
-                  className="block text-gray-700 font-bold mb-2"
-                  htmlFor="email"
-               >
-                  البريد الإلكتروني
-               </label>
                <input
                   type="email"
                   name="email"
@@ -100,21 +105,24 @@ export default function Register() {
                   <HiAtSymbol size={25} />
                </span>
             </div>
-            {/* {formik.errors.email && formik.touched.email ? <span className='text-rose-500'>{formik.errors.email}</span> : <></>} */}
+            {formik.errors.email && formik.touched.email ? (
+               <span className="text-rose-500">{formik.errors.email}</span>
+            ) : (
+               <></>
+            )}
+            <label
+               className="block text-gray-700 font-bold mb-2"
+               htmlFor="password"
+            >
+               كلمة المرور
+            </label>{" "}
             <div
                className={`${styles.input_group} ${
                   formik.errors.password && formik.touched.password
                      ? "border-rose-600"
                      : ""
-               }`}
+               } `}
             >
-               <label
-                  className="block text-gray-700 font-bold mb-2"
-                  htmlFor="password"
-               >
-                  كلمة المرور
-               </label>
-
                <input
                   type={`${show.password ? "text" : "password"}`}
                   name="password"
@@ -129,46 +137,25 @@ export default function Register() {
                   <HiFingerPrint size={25} />
                </span>
             </div>
-            {/* {formik.errors.password && formik.touched.password ? <span className='text-rose-500'>{formik.errors.password}</span> : <></>} */}
-
-            <div
-               className={`${styles.input_group} ${
-                  formik.errors.cpassword && formik.touched.cpassword
-                     ? "border-rose-600"
-                     : ""
-               }`}
-            >
-               <input
-                  type={`${show.cpassword ? "text" : "password"}`}
-                  name="cpassword"
-                  placeholder="Confirm Password"
-                  className={styles.input_text}
-                  {...formik.getFieldProps("cpassword")}
-               />
-               <span
-                  className="icon flex items-center px-4"
-                  onClick={() =>
-                     setShow({ ...show, cpassword: !show.cpassword })
-                  }
-               >
-                  <HiFingerPrint size={25} />
-               </span>
-            </div>
+            {formik.errors.password && formik.touched.password ? (
+               <span className="text-rose-500">{formik.errors.password}</span>
+            ) : (
+               <></>
+            )}
             {/* {formik.errors.cpassword && formik.touched.cpassword ? <span className='text-rose-500'>{formik.errors.cpassword}</span> : <></>} */}
-
             {/* login buttons */}
             <div className="input-button">
-               <button type="submit" className={styles.button}>
-                  Sign Up
+               <button type="submit" className={`${styles.button} mt-8`}>
+                  تسجيل
                </button>
             </div>
          </form>
 
          {/* bottom */}
          <p className="text-center text-gray-400 ">
-            Have an account?{" "}
+            هل لديك حساب?{" "}
             <Link href={"/login"}>
-               <span className="text-blue-700">Sign In</span>
+               <span className="text-blue-700">تسجيل دخول</span>
             </Link>
          </p>
       </div>

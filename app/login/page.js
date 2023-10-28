@@ -39,125 +39,99 @@ export default function Login() {
       if (status.ok) router.push(status.url);
    }
 
-   // Google Handler function
-   async function handleGoogleSignin() {
-      signIn("google", { callbackUrl: "http://localhost:3000" });
-   }
-
-   // Github Login
-   async function handleGithubSignin() {
-      signIn("github", { callbackUrl: "http://localhost:3000" });
-   }
-
    return (
-      <div>
-         <Head>
-            <title>Login</title>
-         </Head>
+      <div className="flex flex-col items-center justify-center min-h-screen py-2 fontgl">
+         <h1
+            className="text-4xl font-bold  mt-16 mb-4 text-center text-blue-500"
+            id="menu"
+         >
+            قم بتسجيل الدخول وانضم الى عائلتنا{" "}
+         </h1>
 
-         <section className="w-3/4 mx-auto flex flex-col gap-10">
-            <div className="title">
-               <h1 className="text-gray-800 text-4xl font-bold py-4">
-                  Explore
-               </h1>
-               <p className="w-3/4 mx-auto text-gray-400">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Dolores, officia?
-               </p>
+         {/* form */}
+         <form
+            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full sm:w-3/4"
+            onSubmit={formik.handleSubmit}
+         >
+            <label
+               className="block text-gray-700 font-bold mb-2"
+               htmlFor="email"
+            >
+               البريد الإلكتروني
+            </label>
+            <div
+               className={`${styles.input_group} ${
+                  formik.errors.email && formik.touched.email
+                     ? "border-rose-600"
+                     : ""
+               }`}
+            >
+               <input
+                  type="email"
+                  name="email"
+                  placeholder=" البريد الإلكتروني
+                     "
+                  className={styles.input_text}
+                  {...formik.getFieldProps("email")}
+               />
+               <span className="icon flex items-center px-4">
+                  <HiAtSymbol size={25} />
+               </span>
+            </div>
+            {formik.errors.email && formik.touched.email ? (
+               <span className="text-rose-500">{formik.errors.email}</span>
+            ) : (
+               <></>
+            )}
+            <label
+               className="block text-gray-700 font-bold mb-2"
+               htmlFor="password"
+            >
+               كلمة المرور
+            </label>
+            <div
+               className={`${styles.input_group} ${
+                  formik.errors.password && formik.touched.password
+                     ? "border-rose-600"
+                     : ""
+               }`}
+            >
+               <input
+                  type={`${show ? "text" : "password"}`}
+                  name="password"
+                  placeholder="كلمة المرور
+                     "
+                  className={styles.input_text}
+                  {...formik.getFieldProps("password")}
+               />
+               <span
+                  className="icon flex items-center px-4"
+                  onClick={() => setShow(!show)}
+               >
+                  <HiFingerPrint size={25} />
+               </span>
             </div>
 
-            {/* form */}
-            <form
-               className="flex flex-col gap-5"
-               onSubmit={formik.handleSubmit}
-            >
-               <div
-                  className={`${styles.input_group} ${
-                     formik.errors.email && formik.touched.email
-                        ? "border-rose-600"
-                        : ""
-                  }`}
-               >
-                  <input
-                     type="email"
-                     name="email"
-                     placeholder="Email"
-                     className={styles.input_text}
-                     {...formik.getFieldProps("email")}
-                  />
-                  <span className="icon flex items-center px-4">
-                     <HiAtSymbol size={25} />
-                  </span>
-               </div>
-               {/* {formik.errors.email && formik.touched.email ? <span className='text-rose-500'>{formik.errors.email}</span> : <></>} */}
+            {formik.errors.password && formik.touched.password ? (
+               <span className="text-rose-500">{formik.errors.password}</span>
+            ) : (
+               <></>
+            )}
+            {/* login buttons */}
+            <div className="input-button mt-8">
+               <button type="submit" className={styles.button}>
+                  تسجيل
+               </button>
+            </div>
+         </form>
 
-               <div
-                  className={`${styles.input_group} ${
-                     formik.errors.password && formik.touched.password
-                        ? "border-rose-600"
-                        : ""
-                  }`}
-               >
-                  <input
-                     type={`${show ? "text" : "password"}`}
-                     name="password"
-                     placeholder="password"
-                     className={styles.input_text}
-                     {...formik.getFieldProps("password")}
-                  />
-                  <span
-                     className="icon flex items-center px-4"
-                     onClick={() => setShow(!show)}
-                  >
-                     <HiFingerPrint size={25} />
-                  </span>
-               </div>
-
-               {/* {formik.errors.password && formik.touched.password ? <span className='text-rose-500'>{formik.errors.password}</span> : <></>} */}
-               {/* login buttons */}
-               <div className="input-button">
-                  <button type="submit" className={styles.button}>
-                     Login
-                  </button>
-               </div>
-               <div className="input-button">
-                  <button
-                     type="button"
-                     onClick={handleGoogleSignin}
-                     className={styles.button_custom}
-                  >
-                     Sign In with Google{" "}
-                     <Image
-                        src={"/assets/google.svg"}
-                        width="20"
-                        height={20}
-                     ></Image>
-                  </button>
-               </div>
-               <div className="input-button">
-                  <button
-                     type="button"
-                     onClick={handleGithubSignin}
-                     className={styles.button_custom}
-                  >
-                     Sign In with Github{" "}
-                     <Image
-                        src={"/assets/github.svg"}
-                        width={25}
-                        height={25}
-                     ></Image>
-                  </button>
-               </div>
-            </form>
-
-            {/* bottom */}
-            <p className="text-center text-gray-400 ">
-               don't have an account yet?{" "}
-               <Link href={"/register"}>
-                  <span className="text-blue-700">Sign Up</span>
-               </Link>
-            </p>
-         </section>
+         {/* bottom */}
+         <p className="text-center text-gray-400 ">
+            ليس لديك حساب؟{" "}
+            <Link href={"/signup"}>
+               <span className="text-blue-700">سجل الان</span>
+            </Link>
+         </p>
       </div>
    );
 }
