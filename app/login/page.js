@@ -1,5 +1,5 @@
 "use client";
-import Head from "next/head";
+
 import Link from "next/link";
 import styles from "@styles/Form.module.css";
 import Image from "next/image";
