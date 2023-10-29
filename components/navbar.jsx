@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Logo from "@pics/icons/Logo.png";
 import Bag from "@pics/icons/bag.png";
+import Link from "next/link";
 
 const AvatarMenu = () => {
   const [state, setState] = useState(false);
@@ -25,13 +26,15 @@ const AvatarMenu = () => {
         <button className="bg-blue-100 py-3 px-4 rounded-full me-4">
           <Image src={Bag} alt="image" />
         </button>
-        <button
-          ref={profileRef}
-          className="w-fit bg-sky-500 px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
-          onClick={() => setState(!state)}
-        >
-          تسجيل الدخول
-        </button>
+        <Link href={`/signup`}>
+          <button
+            ref={profileRef}
+            className="w-fit bg-sky-500 px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
+            onClick={() => setState(!state)}
+          >
+            تسجيل الدخول
+          </button>
+        </Link>
       </div>
     </div>
   );
