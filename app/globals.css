@@ -11,6 +11,9 @@ main {
    background-color: #f6f9fc;
    font-family: global;
 }
+.fontgl {
+   font-family: global;
+}
 .popup-transition {
   transition: transform 0.3s ease-in-out;
 }

@@ -10,14 +10,14 @@
   },
   "dependencies": {
     "@tabler/icons-react": "^2.40.0",
+    "bcryptjs": "^2.4.3",
+    "formik": "^2.4.5",
+    "mongoose": "^7.6.3",
     "blaze-slider": "^1.9.3",
     "keen-slider": "^6.8.6",
     "next": "14.0.0",
-    "node-fetch": "^3.3.2",
-    "nodemailer": "^6.9.7",
     "react": "^18",
-    "react-dom": "^18",
-    "tabler": "^1.0.0-alpha.8"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "autoprefixer": "^10",
