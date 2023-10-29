@@ -35,13 +35,13 @@ const Slider = () => {
         <div className="blaze-track-container">
           <div className="blaze-track ">
             <div className="Zoom-out">
-              <Image src={YoutubeBanner} />
+              <Image src={YoutubeBanner} alt="image" />
             </div>
             <div className="Zoom-out">
-              <Image src={InstaBanner} />
+              <Image src={InstaBanner} alt="image" />
             </div>
             <div layout="fill">
-              <Image src={TiktokBanner} />
+              <Image src={TiktokBanner} alt="image" />
             </div>
           </div>
         </div>

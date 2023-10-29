@@ -13,6 +13,7 @@ export default function Home() {
     <main className=" ">
       <Navbar />
       <Slider />
+      <Popup />
       <FirstDisc />
       <FirstPage2 />
       <MenuService />

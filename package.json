@@ -13,6 +13,8 @@
     "blaze-slider": "^1.9.3",
     "keen-slider": "^6.8.6",
     "next": "14.0.0",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^6.9.7",
     "react": "^18",
     "react-dom": "^18",
     "tabler": "^1.0.0-alpha.8"

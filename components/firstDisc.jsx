@@ -9,7 +9,7 @@ const firstDisc = () => {
   return (
     <div className="flex gap-4 lg:flex-row md:flex-row flex-col my-36 max-w-screen-lg mx-auto ">
       <div>
-        <Image src={stars} />
+        <Image src={stars} alt="image" />
       </div>
 
       <div className="flex flex-col ">
@@ -25,7 +25,7 @@ const firstDisc = () => {
           <div>
             <div className="flex flex-row ">
               <div className="me-2">
-                <Image src={creditCard} />
+                <Image src={creditCard} alt="image" />
               </div>
               <div>
                 <p className="text-sm">البطاقات والدفع</p>
@@ -36,7 +36,7 @@ const firstDisc = () => {
           <div>
             <div className="flex flex-row ">
               <div className="me-2">
-                <Image src={service} />
+                <Image src={service} alt="image" />
               </div>
               <div>
                 <p className="text-sm">خدمة على مدار الساعة </p>
@@ -48,7 +48,7 @@ const firstDisc = () => {
           <div>
             <div className="flex flex-row ">
               <div className="me-2">
-                <Image src={clock} />
+                <Image src={clock} alt="image" />
               </div>
               <div>
                 <p className="text-sm">خدمة فورية </p>
@@ -61,7 +61,7 @@ const firstDisc = () => {
           <div>
             <div className="flex flex-row ">
               <div className="me-2">
-                <Image src={badge} />
+                <Image src={badge} alt="image" />
               </div>
               <div>
                 <p className="text-sm">جودة الخدمة</p>

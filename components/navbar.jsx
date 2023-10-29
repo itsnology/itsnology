@@ -23,7 +23,7 @@ const AvatarMenu = () => {
     <div className="relative lg:border-none">
       <div className="flex flex-row items-center">
         <button className="bg-blue-100 py-3 px-4 rounded-full me-4">
-          <Image src={Bag} />
+          <Image src={Bag} alt="image" />
         </button>
         <button
           ref={profileRef}
