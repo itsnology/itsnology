@@ -3,7 +3,17 @@
 @tailwind utilities;
 
 /*           fonts          */
-
-body {
+@font-face {
+   font-family: global;
+   src: url("/SST Arabic Roman.ttf");
+}
+main {
    background-color: #f6f9fc;
+   font-family: global;
+}
+.fontgl {
+   font-family: global;
+}
+.popup-transition {
+  transition: transform 0.3s ease-in-out;
 }
