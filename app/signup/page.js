@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { registerValidate } from "@lib/validate";
 import { useRouter } from "next/navigation";
+import Logo from "@pics/icons/Logo.png";
 
 export default function Register() {
    const [show, setShow] = useState({ password: false, cpassword: false });
@@ -39,8 +40,13 @@ export default function Register() {
 
    return (
       <div className="flex flex-col items-center justify-center min-h-screen py-2 fontgl">
+         <div className="flex items-center justify-center mb-2">
+            <Link href={"/"}>
+               <Image src={Logo} alt="logo" />
+            </Link>
+         </div>
          <h1
-            className="text-4xl font-bold  mt-16 mb-4 text-center text-blue-500"
+            className="text-4xl font-bold   mb-4 text-center text-blue-500"
             id="menu"
          >
             تسجيل عضو جديد
