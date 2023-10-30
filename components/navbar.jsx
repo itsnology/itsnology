@@ -29,7 +29,7 @@ const AvatarMenu = () => {
             <Link href={`/login`}>
                <button
                   ref={profileRef}
-                  className="w-fit bg-sky-500 px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
+                  className="w-fit gradientbg px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
                   onClick={() => setState(!state)}
                >
                   تسجيل الدخول
@@ -60,7 +60,7 @@ const Navbar = () => {
             className={`bg-slate-50 items-center gap-x-14 px-4 max-w-screen-xl mx-auto md:px-8 lg:flex lg:static`}
          >
             <div className="flex items-center justify-between pt-1 lg:block">
-               <Link href="javascript:void(0)">
+               <Link href="/">
                   <Image src={Logo} width={220} height={60} alt="logo" />
                </Link>
                <div className="lg:hidden">
