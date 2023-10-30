@@ -6,8 +6,8 @@ import FirstPage2 from "@components/firstpage2";
 import MenuService from "@components/menuservices";
 import Rating from "@components/rating";
 import SmallServices from "@components/smallservices";
-
-import FirstDisc from "@components/firstDisc";
+import SeconDisc from "@components/seconDisc";
+import FirstDiscedit from "@components/firstDiscedit";
 import Popup from "@components/popup";
 export default function Home() {
    return (
@@ -15,10 +15,11 @@ export default function Home() {
          <Navbar />
          <Slider />
          <Popup />
-         {/* <FirstDisc /> */}
+         <SeconDisc />
          <FirstPage2 />
          <SmallServices />
          <MenuService />
+         <FirstDiscedit />
          <Rating />
       </main>
    );
