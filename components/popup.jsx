@@ -16,7 +16,7 @@ const Popup = () => {
     subject: "",
     messageText: "",
   });
-  console.log(formData);
+
   const togglePopup = () => {
     setIsOpen(!isOpen);
   };
