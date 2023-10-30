@@ -16,7 +16,7 @@ const EmailVerification = () => {
     // Save the generated OTP to local storage
     localStorage.setItem("otp", generatedOtp);
 
-    const response = await fetch("/api/sendEmail", {
+    const response = await fetch("/api/sendOtp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
