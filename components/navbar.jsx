@@ -26,15 +26,20 @@ const AvatarMenu = () => {
             <button className="bg-blue-100 py-3 px-4 rounded-full me-4">
                <Image src={Bag} alt="image" />
             </button>
-            <Link href={`/login`}>
-               <button
-                  ref={profileRef}
-                  className="w-fit gradientbg px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
-                  onClick={() => setState(!state)}
-               >
-                  تسجيل الدخول
-               </button>
-            </Link>
+
+            <button
+               ref={profileRef}
+               className="w-fit gradientbg px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
+               onClick={() => {
+                  document.getElementById("loginpage").classList.add("flex");
+                  document
+                     .getElementById("loginpage")
+                     .classList.remove("hidden");
+                  setState(!state);
+               }}
+            >
+               تسجيل الدخول
+            </button>
          </div>
       </div>
    );
@@ -51,8 +56,8 @@ const submenuNav = [
    { title: "شدات ببجي", path: "/pubg-services" },
 ];
 
-const Navbar = () => {
-  const [state, setState] = useState(false);
+const Navbar = ({ onLoginClick }) => {
+   const [state, setState] = useState(false);
 
    return (
       <header className="text-base lg:text-sm">
