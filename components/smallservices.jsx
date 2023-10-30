@@ -17,7 +17,7 @@ const services = [
    { name: "خدمات فيسبوك", image: fblogo, url: "facebook" },
    { name: "خدمات إنستغرام", image: instalogo, url: "instagram" },
    { name: "خدمات تويتش", image: twichlogo, url: "twitch" },
-   { name: "خدمات آيتونز", image: ituneslogo, url: "itunes" },
+   { name: "خدمات آيتونز", image: ituneslogo, url: "itunnes" },
    { name: "خدمات ببجي", image: pubglogo, url: "pubg" },
    { name: "خدمات تيك توك", image: tiktoklogo, url: "tiktok" },
    { name: "خدمات يوتيوب", image: ytblogo, url: "youtube" },
@@ -44,7 +44,7 @@ const SmallServices = () => {
                         {service.name}
                      </p>
                      <Link href={`/services/${service.url}`}>
-                        <Image
+                        <Images
                            src={service.image}
                            alt={`${service.name} logo`}
                            width={50}
