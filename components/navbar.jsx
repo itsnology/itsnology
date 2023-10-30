@@ -51,7 +51,7 @@ const submenuNav = [
   { title: "شدات ببجي", path: "javascript:void(0)" },
 ];
 
-const Header = () => {
+const Navbar = () => {
   const [state, setState] = useState(false);
 
   return (
@@ -165,4 +165,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Navbar;
