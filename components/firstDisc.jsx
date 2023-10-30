@@ -22,7 +22,7 @@ const firstDisc = () => {
                المختلفة بكل مصداقية وآمان. شعارنا هو كسب ثقة العملاء الكرام..
             </p>
 
-            <div class="grid gap-6 md:grid-cols-2 sm:grid-cols-1  md:mx-auto mx-auto  lg:mx-6 mt-12">
+            <div className="grid gap-6 md:grid-cols-2 sm:grid-cols-1  md:mx-auto mx-auto  lg:mx-6 mt-12">
                <div>
                   <div className="flex flex-row ">
                      <div className="me-2 p-12 sm:p-0">
