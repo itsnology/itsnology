@@ -37,7 +37,7 @@ const SmallServices = () => {
          </h4>
          <div className="grid grid-cols-2 md:grid-cols-4 gap-4  bg-stone-300 py-16 px-8  ">
             {services.map((service, index) => (
-               <Fragment key={index} className="">
+               <Fragment key={index}>
                   <div className="rounded-full rounded-br-none bg-white p-2 flex justify-between items-center  ">
                      {" "}
                      <p className="text-center  font-bold gradientx text-2xl">

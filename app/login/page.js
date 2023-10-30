@@ -11,7 +11,7 @@ import login_validate from "@lib/validate";
 import { useRouter } from "next/navigation";
 import Logo from "@pics/icons/Logo.png";
 
-export default function Login() {
+export default function Loginnn() {
    const [show, setShow] = useState(false);
    const router = useRouter();
    // formik hook
