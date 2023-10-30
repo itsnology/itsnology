@@ -9,6 +9,7 @@ import { signIn, signOut } from "next-auth/react";
 import { useFormik } from "formik";
 import login_validate from "@lib/validate";
 import { useRouter } from "next/navigation";
+import Logo from "@pics/icons/Logo.png";
 
 export default function Login() {
    const [show, setShow] = useState(false);
@@ -41,8 +42,13 @@ export default function Login() {
 
    return (
       <div className="flex flex-col items-center justify-center min-h-screen py-2 fontgl">
+         <div className="flex items-center justify-center mb-2">
+            <Link href={"/"}>
+               <Image src={Logo} alt="logo" />
+            </Link>
+         </div>
          <h1
-            className="text-4xl font-bold  mt-16 mb-4 text-center text-blue-500"
+            className="text-4xl font-bold   mb-4 text-center text-blue-500"
             id="menu"
          >
             قم بتسجيل الدخول وانضم الى عائلتنا{" "}
