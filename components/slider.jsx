@@ -8,46 +8,46 @@ import BlazeSlider from "blaze-slider";
 import "blaze-slider/dist/blaze.css";
 
 const Slider = () => {
-  const sliderRef = useRef(null);
+   const sliderRef = useRef(null);
 
-  useEffect(() => {
-    const slider = new BlazeSlider(sliderRef.current, {
-      all: {
-        slidesToShow: 1,
-        transitionDuration: 800,
+   useEffect(() => {
+      const slider = new BlazeSlider(sliderRef.current, {
+         all: {
+            slidesToShow: 1,
+            transitionDuration: 800,
 
-        enableAutoplay: true,
-        autoplayDirection: "to left",
-        stopAutoplayOnInteraction: true,
-      },
-    });
-    return () => {
-      slider.destroy();
-    };
-  }, []);
+            enableAutoplay: true,
+            autoplayDirection: "to left",
+            stopAutoplayOnInteraction: true,
+         },
+      });
+      return () => {
+         slider.destroy();
+      };
+   }, []);
 
-  return (
-    <div
-      className="blaze-slider max-w-screen-lg lg-h-98  mx-auto flex justify-center"
-      ref={sliderRef}
-    >
-      <div className="blaze-container">
-        <div className="blaze-track-container">
-          <div className="blaze-track ">
-            <div className="Zoom-out">
-              <Image src={YoutubeBanner} alt="image" />
+   return (
+      <div
+         className="blaze-slider max-w-screen-lg lg-h-98  mx-auto flex justify-center"
+         ref={sliderRef}
+      >
+         <div className="blaze-container">
+            <div className="blaze-track-container">
+               <div className="blaze-track ">
+                  <div className="Zoom-out">
+                     <Image src={YoutubeBanner} alt="image" />
+                  </div>
+                  <div className="Zoom-out">
+                     <Image src={InstaBanner} alt="image" />
+                  </div>
+                  <div layout="fill">
+                     <Image src={TiktokBanner} alt="image" />
+                  </div>
+               </div>
             </div>
-            <div className="Zoom-out">
-              <Image src={InstaBanner} alt="image" />
-            </div>
-            <div layout="fill">
-              <Image src={TiktokBanner} alt="image" />
-            </div>
-          </div>
-        </div>
+         </div>
       </div>
-    </div>
-  );
+   );
 };
 
 export default Slider;

@@ -77,14 +77,12 @@ const MenuService = () => {
    return (
       <div className=" mb-16">
          <h1
-            className="text-4xl font-bold  mt-16 mb-4 text-center text-blue-500"
+            className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
             id="menu"
          >
-            الخدمات التي نقدمها
+            الخدمات الاكثر طلبا
          </h1>
-         <h4 className="text-xl font-semibold mb-8 text-center text-black/40">
-            أنقر على الخدمة لتتمتع بعروضنا
-         </h4>
+
          {isLoading ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                {[...Array(4)].map((_, index) => (
@@ -109,7 +107,7 @@ const MenuService = () => {
                            height={255}
                         />
                      </Link>
-                     <button className=" py-2 px-8 sm:px-6 mt-4 text-white bg-blue-500 rounded-full hover:bg-blue-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
+                     <button className=" py-2 px-8 sm:px-6 mt-4 text-white gradientbg rounded-full hover:bg-blue-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
                         <Link href={`${item.url}`}>أطلب الآن</Link>
                      </button>
                   </div>
