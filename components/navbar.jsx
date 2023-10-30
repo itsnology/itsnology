@@ -51,8 +51,8 @@ const submenuNav = [
    { title: "شدات ببجي", path: "/pubg-services" },
 ];
 
-const Header = () => {
-   const [state, setState] = useState(false);
+const Navbar = () => {
+  const [state, setState] = useState(false);
 
    return (
       <header className="text-base lg:text-sm">
@@ -165,4 +165,4 @@ const Header = () => {
    );
 };
 
-export default Header;
+export default Navbar;
