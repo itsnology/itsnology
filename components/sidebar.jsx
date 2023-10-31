@@ -1,10 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { IconUpload } from "@tabler/icons-react";
+import { IconHome2 } from "@tabler/icons-react";
 import { IconUsers } from "@tabler/icons-react";
 import { IconPackage } from "@tabler/icons-react";
 import { IconStars } from "@tabler/icons-react";
 import { IconLayoutDashboard } from "@tabler/icons-react";
+import { IconShirt } from "@tabler/icons-react";
+import { IconBarcode } from "@tabler/icons-react";
+import { IconCategory2 } from "@tabler/icons-react";
+import Link from "next/link";
 
 const Menu = (props) => {
   const { children, items } = props;
@@ -13,7 +17,7 @@ const Menu = (props) => {
   return (
     <div className="">
       <button
-        className="w-full flex items-center justify-between text-gray-600 p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100 duration-150"
+        className="w-full flex items-center justify-between text-white p-2 rounded-lg hover:text-gray-700 hover:bg-gray-50 active:bg-gray-100 duration-150"
         onClick={() => setIsOpened(!isOpened)}
       >
         <div className="flex items-center gap-x-2">{children}</div>
@@ -34,17 +38,13 @@ const Menu = (props) => {
         <ul className="mx-4 px-2 border-r text-sm font-medium">
           {items.map((item, idx) => (
             <li key={idx}>
-              <a
-                href={item.href}
-                className="flex items-center gap-x-2 text-gray-600 p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100 duration-150"
-              >
-                {item.icon ? (
-                  <div className="text-gray-500">{item.icon}</div>
-                ) : (
-                  ""
-                )}
-                {item.name}
-              </a>
+              {" "}
+              <Link href={`/admin/upload/${item.link}`} passHref>
+                <div class="flex items-center gap-x-2  p-2 rounded-lg text-white hover:text-gray-700 hover:bg-gray-50 active-bg-gray-100 duration-150">
+                  {item.icon}
+                  {item.name}
+                </div>{" "}
+              </Link>
             </li>
           ))}
         </ul>
@@ -59,26 +59,46 @@ const Sidebar = () => {
   const navigation = [
     {
       href: "javascript:void(0)",
-      name: "Users",
-      icon: <IconUsers className="w-5 h-5" />,
+      link: "",
+      name: "الرئيسية",
+      icon: <IconHome2 className="w-5 h-5 " />,
     },
     {
       href: "javascript:void(0)",
-      name: "Orders",
-      icon: <IconPackage className="w-5 h-5" />,
+      link: "Users",
+      name: "العملاء",
+      icon: <IconUsers className="w-5 h-5 " />,
     },
     {
       href: "javascript:void(0)",
-      name: "Reviews",
+      link: "Orders",
+      name: "الطلبات",
+      icon: <IconPackage className="w-5 h-5 " />,
+    },
+    {
+      href: "javascript:void(0)",
+      link: "Reviews",
+      name: "الآراء والتقييمات",
       icon: <IconStars className="w-5 h-5" />,
     },
-  ];
-
-  const nestedNav = [
-    { name: "Category", href: "javascript:void(0)", icon: "" },
-    { name: "Product", href: "javascript:void(0)", icon: "" },
-    { name: "Codes", href: "javascript:void(0)", icon: "" },
-    { name: "Slider Image", href: "javascript:void(0)", icon: "" },
+    {
+      name: "الخدمات",
+      link: "Category",
+      href: "javascript:void(0)",
+      icon: <IconCategory2 className="w-5 h-5" />,
+    },
+    {
+      name: "المنتجات",
+      link: "Product",
+      href: "javascript:void(0)",
+      icon: <IconShirt className="w-5 h-5" />,
+    },
+    {
+      name: "الأكواد",
+      link: "Codes",
+      href: "javascript:void(0)",
+      icon: <IconBarcode className="w-5 h-5" />,
+    },
   ];
 
   const profileRef = useRef();
@@ -98,10 +118,10 @@ const Sidebar = () => {
 
   return (
     <nav
-      className={`fixed top-0 bg-slate-50 right-0 w-full lg:h-full border-l space-y-8 transition-all duration-300 ${
+      className={`fixed top-0 bg-sky-500		right-0 w-full lg:h-full border-l space-y-8 transition-all duration-300 ${
         isSidebarOpen
-          ? "sm:w-80 h-full md:w-72 lg:w-80"
-          : "sm:w-20 lg:w-80 md:w-20 lg:h-full"
+          ? "w-full h-96 md:h-full md:w-72 lg:w-80"
+          : "w-full lg:w-80 md:w-20 lg:h-full"
       }`}
     >
       <div className="flex flex-col h-full px-4">
@@ -109,7 +129,7 @@ const Sidebar = () => {
           <div className="w-full flex items-center gap-x-4">
             <div>
               <span
-                className="flex flex-row text-gray-700 text- font-semibold cursor-pointer"
+                className="flex flex-row text-white text- font-semibold cursor-pointer"
                 onClick={handleDashboardClick}
               >
                 <IconLayoutDashboard className="me-2" />{" "}
@@ -133,21 +153,18 @@ const Sidebar = () => {
           <ul className="text-sm font-medium">
             {navigation.map((item, idx) => (
               <li key={idx}>
-                <a
-                  href={item.href}
-                  className="flex items-center gap-x-2 text-gray-600 p-2 rounded-lg hover:bg-gray-50 active-bg-gray-100 duration-150"
-                >
-                  <div className="text-gray-500">{item.icon}</div>
-                  {item.name}
-                </a>
+                <Link href={`/admin/${item.link}`}>
+                  {" "}
+                  <div
+                    href={item.href}
+                    class="flex items-center gap-x-2  p-2 rounded-lg text-white hover:text-gray-700 hover:bg-gray-50 active-bg-gray-100 duration-150"
+                  >
+                    <div>{item.icon}</div>
+                    {item.name}
+                  </div>{" "}
+                </Link>
               </li>
             ))}
-            <li>
-              <Menu items={nestedNav} className="flex items-center">
-                <IconUpload className="h-5 w-5" />
-                Upload content
-              </Menu>
-            </li>
           </ul>
         </div>
       </div>
