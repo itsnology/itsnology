@@ -1,7 +1,7 @@
 import { Schema, model, models } from "mongoose";
 
 const UserSchema = new Schema({
-   username: {
+   name: {
       type: String,
       required: [true, "Please provide a username"],
       unique: [true, "Username already exists"],
@@ -15,11 +15,9 @@ const UserSchema = new Schema({
    password: {
       type: String,
       required: [true, "Please provide a password"],
-      minlength: 6,
-      select: false,
    },
 });
 
-const Users = models.Users || model("Users", UserSchema);
+const User = models.User || model("User", UserSchema);
 
-export default Users;
+export default User;

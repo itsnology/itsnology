@@ -53,7 +53,7 @@ const Popup = () => {
    };
 
    return (
-      <div className="fixed bottom-0 right-0 p-4 hidden">
+      <div className="fixed bottom-0 right-0 p-4 hidden ">
          <button
             onClick={togglePopup}
             className="bg-blue-500 text-white px-4 py-3 rounded-full focus:outline-none"
