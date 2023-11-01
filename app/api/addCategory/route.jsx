@@ -1,47 +1,41 @@
-// pages/api/categories.js
+import multer from "multer";
+const nextConnect = require("next-connect");
 
 import { connectDB } from "@utils/database";
-import Category from "@models/Category";
+import Category from "@models/Category"; // Import your Category model
 
-export default async (req, res) => {
-  if (req.method === "POST") {
-    // Create a new category
-    try {
-      await connectDB();
-      const category = new Category(req.body);
-      await category.save();
-      res.status(201).json(category);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Server error" });
-    }
-  } else if (req.method === "PUT") {
-    // Update a category
-    try {
-      const updatedCategory = await Category.findByIdAndUpdate(
-        req.query.id,
-        req.body,
-        { new: true }
-      );
-      if (!updatedCategory) {
-        return Response.status(404).json({ error: "Category not found" });
-      }
-      Response.json(updatedCategory);
-    } catch (error) {
-      console.error(error);
-      Response.status(500).json({ error: "Server error" });
-    }
-  } else if (req.method === "DELETE") {
-    // Delete a category
-    try {
-      const deletedCategory = await Category.findByIdAndRemove(req.query.id);
-      if (!deletedCategory) {
-        return Response.status(404).json({ error: "Category not found" });
-      }
-      res.json(deletedCategory);
-    } catch (error) {
-      console.error(error);
-      Response.status(500).json({ error: "Server error" });
-    }
+const upload = multer({ dest: "public/uploads/" }); // Define the upload directory
+
+const apiRoute = nextConnect({
+  onError(error, req, res) {
+    res
+      .status(501)
+      .json({ error: `Sorry, something went wrong! ${error.message}` });
+  },
+});
+
+apiRoute.use(upload.single("logoFile")); // Use multer to handle the logoFile field
+
+apiRoute.post(async (req, res) => {
+  try {
+    await connectDB();
+    const newCategory = new Category({
+      categoryName: req.body.name,
+      categoryBanner: req.body.categoryBanner, // File path or URL for the banner image
+      categoryLogo: req.file ? `/uploads/${req.file.filename}` : null, // Store the logo image file path
+    });
+
+    const savedCategory = await newCategory.save();
+
+    res.status(201).json({
+      message: "Category created successfully",
+      category: savedCategory,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Category creation failed", message: error.message });
   }
-};
+});
+
+export default apiRoute;

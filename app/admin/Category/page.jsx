@@ -52,6 +52,37 @@ const Page = () => {
     toast.success("تمت إضافة الخدمة بنجاح");
   };
 
+  const handleAddCategory = async () => {
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("logoFile", formData.logoFile);
+    data.append("bannerFile", formData.bannerFile);
+
+    try {
+      const response = await fetch("/api/addCategory", {
+        method: "POST",
+        body: data,
+      });
+
+      if (response.ok) {
+        showSuccess();
+        const newCategory = await response.json();
+        setCategoryData([...categoryData, newCategory]);
+        setFormData({
+          name: "",
+          logoFile: null,
+          bannerFile: null,
+        });
+      } else {
+        console.error("فشل إضافة الخدمة");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  
+
   const handleEditCategory = (categoryIndex) => {
     // Set the category you want to edit
     const editingCategory = categoryData[categoryIndex];
@@ -179,6 +210,7 @@ const Page = () => {
             <div className="flex mt-4">
               <button
                 type="submit"
+                onClick={handleAddCategory}
                 className="bg-blue-500 text-white px-4 py-2 rounded-full focus:outline-none me-2"
               >
                 إضافة
