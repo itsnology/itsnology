@@ -9,11 +9,19 @@
 }
 main {
    background-color: #f6f9fc;
-   font-family: global;
 }
-.fontgl {
+* {
    font-family: global;
 }
 .popup-transition {
-  transition: transform 0.3s ease-in-out;
+   transition: transform 0.3s ease-in-out;
+}
+
+.gradientbg {
+   /* @apply bg-gradient-to-tl from-green-300 via-blue-500 to-purple-600 */
+   @apply bg-gradient-to-r from-green-400 to-blue-500;
+}
+
+.gradientx {
+   @apply bg-gradient-to-r from-green-400 to-blue-500  text-transparent bg-clip-text;
 }

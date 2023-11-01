@@ -1,44 +1,53 @@
-import { NextResponse, NextRequest } from "next/server";
-
 import nodemailer from "nodemailer";
 
 export async function POST(request) {
-  if (request.method === "POST") {
-    const { name, email, subject, message } = request.body;
+  try {
+    const formData = await request.json();
+    const name = formData.name;
+    const email = formData.email;
+    const subject = formData.subject;
+    const messageText = formData.messageText;
+    console.log(email);
 
-    // Create a transporter object using your email service provider (e.g., Gmail)
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: "Gmail",
       auth: {
-        user: "metiriabdou@gmail.com",
-        pass: "eibqxahenqglzjna",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
-      debug: true,
     });
 
-    // Setup email data
     const mailOptions = {
-      from: "your-email@gmail.com",
-      to: "metiriabdou@gmail.com", // Change to your recipient's email address
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER,
       subject: subject,
-      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+      text: `
+      Name: ${name} 
+      Email : ${email}
+      Message text: 
+      ${messageText}`,
+    };
+    const mailOptions2 = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "التواصل مع الدعم الفني",
+      text: `
+      ،${name}مرحبا
+بفضل الله، قد استلمت فرقتنا الكريمة شكوتكم بكل اهتمام وجدية. يسرنا أن نعلمكم أننا قد بدأنا في دراسة الشكوى التي تقدمتم بها، وسنعمل جاهدين على حلها في أقرب وقت ممكن.
+
+فيما بين الحين والآخر، ستتلقون تحديثات منا حول تقدم العمل على شكوتكم. إذا كانت لديكم أي استفسارات إضافية أو تحتاجون إلى مزيد من المعلومات، فلا تترددوا في التواصل معنا في أي وقت.
+
+شكرًا مجددًا على ثقتكم بخدماتنا، ونتطلع إلى تقديم الدعم والحلول المناسبة لكم.
+
+      `,
     };
 
-    const sendMailPromise = new Promise((resolve, reject) => {
-      transporter.sendMail(mailOptions, function (err) {
-        if (!err) {
-          resolve("Email sent");
-        } else {
-          reject(err.message);
-        }
-      });
-    });
+    await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions2);
 
-    try {
-      await sendMailPromise();
-      return NextResponse.json({ message: "Email sent" });
-    } catch (err) {
-      return NextResponse.json({ error: err }, { status: 500 });
-    }
+    return Response.json({ message: "Success: email was sent" });
+  } catch (error) {
+    console.error("Email sending error:", error);
+    return Response.json({ message: "COULD NOT SEND MESSAGE" }, 500);
   }
 }
