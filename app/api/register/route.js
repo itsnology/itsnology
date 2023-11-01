@@ -1,6 +1,5 @@
 import { connectDB } from "@utils/database";
 import User from "@models/User";
-import bcrypt from "bcryptjs";
 
 export const POST = async (req) => {
    // const hashedPassword = await bcrypt.hash(password, 10);

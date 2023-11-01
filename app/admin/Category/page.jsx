@@ -4,6 +4,26 @@ import SideBar from "@components/sidebar";
 import toast, { Toaster } from "react-hot-toast";
 
 const Page = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    logoFile: null,
+    bannerFile: null,
+  });
+
+  const [categoryData, setCategoryData] = useState([
+    {
+      categoryName: " خدمات الانستغرام ",
+      categoryBanner: " بانر الانستغرام ",
+      categoryLogo: " لوغو الانستغرام",
+    },
+    {
+      categoryName: "Category 2",
+      categoryBanner: "Banner 2",
+      categoryLogo: "Logo 2",
+    },
+    // Add more category data as needed
+  ]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -29,60 +49,57 @@ const Page = () => {
   };
 
   const showSuccess = () => {
-    toast.success("Message sent successfully");
+    toast.success("تمت إضافة الخدمة بنجاح");
   };
 
-  const [formData, setFormData] = useState({
-    name: "",
-    logoFile: null, // Add logoFile state
-    bannerFile: null, // Add bannerFile state
-  });
+  const handleEditCategory = (categoryIndex) => {
+    // Set the category you want to edit
+    const editingCategory = categoryData[categoryIndex];
+    setFormData({
+      name: editingCategory.categoryName,
+      logoFile: null,
+      bannerFile: null,
+      editingIndex: categoryIndex,
+    });
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSaveChanges = () => {
+    // Implement the logic for saving the edited category here
+    if (formData.editingIndex !== undefined) {
+      const updatedCategories = [...categoryData];
+      const updatedCategoryIndex = formData.editingIndex;
 
-    // Include the formData state in your fetch request, which can be handled by your server.
-
-    try {
-      const response = await fetch("/api/sendEmail", {
-        method: "POST",
-        headers: {
-          // Your headers
-        },
-        body: JSON.stringify(formData), // Include the formData in the request
-      });
-
-      if (response.ok) {
-        showSuccess();
-        console.log("Email sent successfully");
-        setTimeout(() => {
-          setFormData({
-            name: "",
-            logoFile: null, // Reset the logoFile state
-            bannerFile: null, // Reset the bannerFile state
-          });
-        }, 300);
-      } else {
-        console.error("Failed to send email");
-      }
-    } catch (error) {
-      console.error("Error:", error);
+      updatedCategories[updatedCategoryIndex] = {
+        categoryName: formData.name,
+        categoryBanner: "Updated Banner", // Update with your logic
+        categoryLogo: "Updated Logo", // Update with your logic
+      };
+      setCategoryData(updatedCategories);
     }
+
+    // Reset the form
+    setFormData({
+      name: "",
+      logoFile: null,
+      bannerFile: null,
+    });
   };
 
-  const [categoryData, setCategoryData] = useState([
-    {
-      categoryName: " خدمات الانستغرام ",
-      categoryBanner: " بانر الانستغرام ",
-      categoryLogo: " لوغو الانستغرام",
-    },
-    {
-      categoryName: "Category 2",
-      categoryBanner: "Banner 2",
-      categoryLogo: "Logo 2",
-    },
-    // Add more category data as needed
-  ]);
+  const handleDiscardChanges = () => {
+    // Reset the form
+    setFormData({
+      name: "",
+      logoFile: null,
+      bannerFile: null,
+    });
+  };
+
+  const handleDeleteCategory = (categoryIndex) => {
+    // Implement the logic for deleting the category at the specified index
+    const updatedCategories = [...categoryData];
+    updatedCategories.splice(categoryIndex, 1);
+    setCategoryData(updatedCategories);
+  };
 
   return (
     <div className="flex md:flex-row ">
@@ -98,7 +115,10 @@ const Page = () => {
           </div>
 
           <form
-            onSubmit={handleSubmit}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSaveChanges();
+            }}
             method="POST"
             className="mt-4 flex items-center flex-col lg:flex-row"
           >
@@ -118,6 +138,7 @@ const Page = () => {
                 onChange={handleInputChange}
                 className="w-64 p-2 border rounded-full focus:outline-blue-400"
                 required
+                disabled={formData.editingIndex !== undefined}
               />
             </div>
 
@@ -134,6 +155,7 @@ const Page = () => {
                 name="لوغو الخدمة"
                 onChange={handleLogoUpload}
                 className="w-64 p-2 border rounded-full focus:outline-blue-400"
+                disabled={formData.editingIndex !== undefined}
               />
             </div>
 
@@ -150,18 +172,21 @@ const Page = () => {
                 name="بانر الخدمة"
                 onChange={handleBannerUpload}
                 className="w-64 p-2 border rounded-full focus:outline-blue-400"
+                disabled={formData.editingIndex !== undefined}
               />
             </div>
 
-            <button
-              type="submit"
-              className="bg-blue-500 mt-4 lg:mt-6 text-white px-4 py-2 rounded-full focus:outline-none"
-            >
-              إضافة
-            </button>
-            <Toaster />
+            <div className="flex mt-4">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded-full focus:outline-none me-2"
+              >
+                إضافة
+              </button>
+            </div>
           </form>
         </div>
+
         <div className="max-w-screen-xl mx-auto px-4 md:px-8">
           <div className="items-start justify-between md:flex">
             <div className="max-w-xl mt-4">
@@ -184,27 +209,81 @@ const Page = () => {
                 {categoryData.map((category, idx) => (
                   <tr key={idx}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {category.categoryName}
+                      {formData.editingIndex === idx ? (
+                        <input
+                          type="text"
+                          placeholder="  إسم الخدمة"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          className="w-40 p-2 border rounded-full focus:outline-blue-400"
+                        />
+                      ) : (
+                        category.categoryName
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {category.categoryBanner}
+                      {formData.editingIndex === idx ? (
+                        <input
+                          type="file"
+                          name="لوغو الخدمة"
+                          onChange={handleLogoUpload}
+                          className="w-52 p-2 border rounded-full focus:outline-blue-400"
+                        />
+                      ) : (
+                        category.categoryBanner
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {category.categoryLogo}
+                      {formData.editingIndex === idx ? (
+                        <input
+                          type="file"
+                          name="بانر الخدمة"
+                          onChange={handleBannerUpload}
+                          className="w-52 p-2 border rounded-full focus:outline-blue-400"
+                        />
+                      ) : (
+                        category.categoryLogo
+                      )}
                     </td>
                     <td className="text-right px-6 whitespace-nowrap">
-                      <a
-                        href="javascript:void()"
-                        className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
-                      >
-                        Edit
-                      </a>
-                      <button
-                        href="javascript:void()"
-                        className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
-                      >
-                        Delete
-                      </button>
+                      {formData.editingIndex === idx ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={handleSaveChanges}
+                            className="bg-green-500 text-white px-4 py-2 rounded-full me-2 focus:outline-none"
+                          >
+                            Save Changes
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleDiscardChanges}
+                            className="bg-red-500 text-white px-4 py-2 rounded-full focus:outline-none"
+                          >
+                            Discard Changes
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleEditCategory(idx)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-full me-2 focus:outline-none"
+                            disabled={formData.editingIndex !== undefined}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteCategory(idx)}
+                            className="bg-red-500 text-white px-4 py-2 rounded-full focus:outline-none"
+                            disabled={formData.editingIndex !== undefined}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}
