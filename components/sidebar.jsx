@@ -134,7 +134,7 @@ const Sidebar = () => {
               >
                 <IconLayoutDashboard className="me-2" />{" "}
                 <p
-                  className={`overflow-auto ${
+                  className={` ${
                     isSidebarOpen ? "block" : "md:hidden lg:block block "
                   }`}
                 >
