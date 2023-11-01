@@ -7,23 +7,40 @@ import { HiAtSymbol, HiFingerPrint, HiOutlineUser } from "react-icons/hi";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Logo from "@pics/icons/Logo.png";
+import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export default function Register() {
-   const [show, setShow] = useState({ password: false, cpassword: false });
+   // const [show, setShow] = useState({ password: false, cpassword: false });
    const [name, setName] = useState("");
    const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
+   // const [password, setPassword] = useState("");
    const [error, setError] = useState("");
+   const [number, setnumber] = useState("");
+   const [countryCode, setCountryCode] = useState("+1");
 
    const router = useRouter();
 
    const handleSubmit = async (e) => {
       e.preventDefault();
 
-      if (!name || !email || !password) {
+      if (!name || !email || !number) {
          setError("All fields are necessary.");
          return;
       }
+
+      //    const result = await signIn({
+      //       email,
+      //       name,
+      //       number,
+      //    });
+
+      //    if (result.error) {
+      //       setError(result.error);
+      //    } else {
+      //       router.push("/");
+      //    }
+      // };
 
       try {
          const resUserExists = await fetch("api/userExists", {
@@ -49,9 +66,11 @@ export default function Register() {
             body: JSON.stringify({
                name,
                email,
-               password,
+               number,
             }),
          });
+
+         console.log("res: ", res);
 
          if (res.ok) {
             const form = e.target;
@@ -103,6 +122,7 @@ export default function Register() {
                   className={styles.input_text}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                />
                <span className="icon flex items-center px-4">
                   <HiOutlineUser size={25} />
@@ -131,6 +151,7 @@ export default function Register() {
                   className={styles.input_text}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                />
                <span className="icon flex items-center px-4">
                   <HiAtSymbol size={25} />
@@ -143,31 +164,38 @@ export default function Register() {
             )}
             <label
                className="block text-gray-700 font-bold mb-2"
-               htmlFor="password"
+               htmlFor="number"
             >
-               كلمة المرور
-            </label>{" "}
+               رقم الهاتف
+            </label>
             <div
                className={`${styles.input_group} ${
-                  error && !password ? "border-rose-600" : ""
+                  error && !number ? "border-rose-600" : ""
                } `}
             >
-               <input
-                  type={`${show.password ? "text" : "password"}`}
-                  name="password"
-                  placeholder="كلمة المرور"
-                  className={styles.input_text}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-               />
-               <span
-                  className="icon flex items-center px-4"
-                  onClick={() => setShow({ ...show, password: !show.password })}
-               >
-                  <HiFingerPrint size={25} />
-               </span>
+               <div className="flex items-center">
+                  <select
+                     className={`${styles.input_text} rounded-l-md`}
+                     value={countryCode}
+                     onChange={(e) => setCountryCode(e.target.value)}
+                  >
+                     <option value="+1">+1 (USA)</option>
+                     <option value="+91">+91 (India)</option>
+                     <option value="+44">+44 (UK)</option>
+                     {/* add more options for other countries */}
+                  </select>
+                  <input
+                     type="tel"
+                     name="number"
+                     placeholder="رقم الهاتف"
+                     className={`${styles.input_text} rounded-r-md`}
+                     value={number}
+                     onChange={(e) => setnumber(e.target.value)}
+                     required
+                  />
+               </div>
             </div>
-            {error && !password ? (
+            {error && !number ? (
                <span className="text-rose-500">{error}</span>
             ) : (
                <></>

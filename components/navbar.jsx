@@ -13,6 +13,7 @@ const AvatarMenu = () => {
    const profileRef = useRef();
 
    const { data: session } = useSession();
+   console.log(session);
 
    useEffect(() => {
       const handleDropDown = (e) => {
@@ -26,7 +27,7 @@ const AvatarMenu = () => {
    }, []);
 
    return (
-      <div className="relative lg:border-none">
+      <div className="relative lg:border-none bg-slate-50">
          <div className="flex flex-row items-center">
             <button className="bg-blue-100 py-3 px-4 rounded-full me-4">
                <Image src={Bag} alt="image" />
