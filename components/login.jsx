@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Fragment } from "react";
 import Logo from "@pics/icons/Logo.png";
 import Image from "next/image";
@@ -10,12 +10,51 @@ import { registerValidate } from "@lib/validate";
 import { HiAtSymbol } from "react-icons/hi";
 import { FaTimes, FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { FaRedo } from "react-icons/fa"; // Import the icon from react-icons
 
 const Login = () => {
    const [otpSent, setOtpSent] = useState(false);
    const [email, setEmail] = useState("");
    const [otp, setOtp] = useState("");
    const [verificationResult, setVerificationResult] = useState("");
+   const [showOtpInput, setShowOtpInput] = useState(false);
+   const [counter, setCounter] = useState(30);
+
+   useEffect(() => {
+      let intervalId;
+      if (counter > 0 && showOtpInput) {
+         intervalId = setInterval(() => {
+            setCounter((prevCounter) => prevCounter - 1);
+         }, 1000);
+      } else if (counter === 0) {
+         // Delete the OTP from local storage when the counter reaches 0
+         localStorage.removeItem("otp");
+      }
+      return () => clearInterval(intervalId);
+   }, [counter, showOtpInput]);
+
+   const handleResendOtp = async () => {
+      const generatedOtp = Math.floor(100000 + Math.random() * 900000);
+
+      // Save the generated OTP to local storage
+      localStorage.setItem("otp", generatedOtp);
+      setShowOtpInput(true);
+      setCounter(60);
+
+      const response = await fetch("/api/sendOtp", {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ email, generatedOtp }), // Send email as JSON string
+      });
+
+      if (response.ok) {
+         setOtpSent(true);
+      } else {
+         console.error("Failed to send email");
+      }
+   };
 
    const router = useRouter();
 
@@ -34,6 +73,8 @@ const Login = () => {
 
       // Save the generated OTP to local storage
       localStorage.setItem("otp", generatedOtp);
+      setShowOtpInput(true);
+      setCounter(60);
 
       const response = await fetch("/api/sendOtp", {
          method: "POST",
@@ -99,7 +140,7 @@ const Login = () => {
                      className="text-4xl font-bold mb-4 text-center text-blue-500"
                      id="menu"
                   >
-                     OTP Verification
+                     رمز التحقق
                   </h1>
                   <div className="flex flex-col items-center justify-center">
                      <p className="text-center mb-4">
@@ -111,7 +152,7 @@ const Login = () => {
                            className="block text-gray-700 font-bold mb-2"
                            htmlFor="otp"
                         >
-                           Enter OTP:
+                           ادخل الرمز
                         </label>
                         <div
                            className={`${styles.input_group} ${
@@ -132,14 +173,30 @@ const Login = () => {
                               {verificationResult}
                            </p>
                         )}
-                     </div>
-                     <div className="flex justify-center mt-8">
-                        <button
-                           className={`${styles.button} bg-blue-500 hover:bg-blue-700 text-white`}
-                           onClick={handleVerifyOtp}
-                        >
-                           Verify OTP
-                        </button>
+                        <div className="flex justify-center mt-4">
+                           {counter > 0 ? (
+                              <button
+                                 className={`px-4 py-4 mx-4 bg-gray-500 hover:bg-gray-700 text-white cursor-not-allowed flex items-center`}
+                                 disabled
+                              >
+                                 ({counter})
+                              </button>
+                           ) : (
+                              <button
+                                 className={`px-4 py-4 mx-4 bg-gray-500 hover:bg-gray-700 text-white flex items-center`}
+                                 onClick={handleResendOtp}
+                              >
+                                 <FaRedo className="mr-2" />
+                              </button>
+                           )}
+
+                           <button
+                              className={` bg-blue-500 hover:bg-blue-700 text-white px-16 py-4`}
+                              onClick={handleVerifyOtp}
+                           >
+                              التحقق
+                           </button>
+                        </div>
                      </div>
                   </div>
                </div>

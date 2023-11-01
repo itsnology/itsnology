@@ -4,10 +4,16 @@ import Image from "next/image";
 import Logo from "@pics/icons/Logo.png";
 import Bag from "@pics/icons/bag.png";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
+
+import { useSession } from "next-auth/react";
 
 const AvatarMenu = () => {
    const [state, setState] = useState(false);
    const profileRef = useRef();
+
+   const { data: session } = useSession();
+   console.log(session);
 
    useEffect(() => {
       const handleDropDown = (e) => {
@@ -21,25 +27,34 @@ const AvatarMenu = () => {
    }, []);
 
    return (
-      <div className="relative lg:border-none">
+      <div className="relative lg:border-none bg-slate-50">
          <div className="flex flex-row items-center">
             <button className="bg-blue-100 py-3 px-4 rounded-full me-4">
                <Image src={Bag} alt="image" />
             </button>
-
-            <button
-               ref={profileRef}
-               className="w-fit gradientbg px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
-               onClick={() => {
-                  document.getElementById("loginpage").classList.add("flex");
-                  document
-                     .getElementById("loginpage")
-                     .classList.remove("hidden");
-                  setState(!state);
-               }}
-            >
-               تسجيل الدخول
-            </button>
+            {!session?.user ? (
+               <button
+                  ref={profileRef}
+                  className="w-fit gradientbg px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
+                  onClick={() => {
+                     document.getElementById("loginpage").classList.add("flex");
+                     document
+                        .getElementById("loginpage")
+                        .classList.remove("hidden");
+                     setState(!state);
+                  }}
+               >
+                  تسجيل الدخول
+               </button>
+            ) : (
+               <button
+                  ref={profileRef}
+                  className=" px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block w-fit bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-red-400 to-red-600"
+                  onClick={() => signOut()}
+               >
+                  تسجيل خروج
+               </button>
+            )}
          </div>
       </div>
    );
