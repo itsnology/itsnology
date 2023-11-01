@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Skeleton from "@components/Skeleton";
+import Skeleton from "@components/skeleton";
 import fbcrd from "@pics/cards/fbcrd.png";
 import instacrd from "@pics/cards/instacrd.png";
 import tweetercrd from "@pics/cards/tweetercrd.png";
