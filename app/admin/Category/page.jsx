@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import SideBar from "@components/sidebar";
+
 import toast, { Toaster } from "react-hot-toast";
 
 const Page = () => {
@@ -8,6 +9,7 @@ const Page = () => {
     name: "",
     logoFile: null,
     bannerFile: null,
+    isSocialMedia: false,
   });
 
   const [categoryData, setCategoryData] = useState([
@@ -25,10 +27,11 @@ const Page = () => {
   ]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === "checkbox" ? checked : value;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: inputValue,
     });
   };
 
@@ -57,6 +60,8 @@ const Page = () => {
     data.append("name", formData.name);
     data.append("logoFile", formData.logoFile);
     data.append("bannerFile", formData.bannerFile);
+    data.append("isSocialMedia", formData.isSocialMedia);
+    console.log(data);
 
     try {
       const response = await fetch("/api/addCategory", {
@@ -80,8 +85,6 @@ const Page = () => {
       console.error("Error:", error);
     }
   };
-
-  
 
   const handleEditCategory = (categoryIndex) => {
     // Set the category you want to edit
@@ -204,6 +207,22 @@ const Page = () => {
                 onChange={handleBannerUpload}
                 className="w-64 p-2 border rounded-full focus:outline-blue-400"
                 disabled={formData.editingIndex !== undefined}
+              />
+            </div>
+            <div className="me-2 ms-2 mb-5">
+              <label
+                htmlFor="isSocialMedia"
+                className="block text-sm mb-5 font-medium text-gray-700"
+              >
+                خدمة سوشل ميديا؟
+              </label>
+              <input
+                type="checkbox"
+                id="isSocialMedia"
+                name="isSocialMedia"
+                checked={formData.isSocialMedia}
+                onChange={handleInputChange}
+                className="rounded-full mx-auto flex w-6 h-6 focus:outline-blue-400"
               />
             </div>
 

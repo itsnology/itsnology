@@ -1,41 +1,59 @@
-import multer from "multer";
-const nextConnect = require("next-connect");
-
 import { connectDB } from "@utils/database";
-import Category from "@models/Category"; // Import your Category model
+import Category from "@models/Category";
 
-const upload = multer({ dest: "public/uploads/" }); // Define the upload directory
+const multer = require("multer");
 
-const apiRoute = nextConnect({
-  onError(error, req, res) {
-    res
-      .status(501)
-      .json({ error: `Sorry, something went wrong! ${error.message}` });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Specify the directory where you want to save the uploaded files
+    cb(null, "../../../public/uploads"); // 'uploads/' is the directory name
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
   },
 });
 
-apiRoute.use(upload.single("logoFile")); // Use multer to handle the logoFile field
+const upload = multer({ storage: storage });
 
-apiRoute.post(async (req, res) => {
+export async function POST(req) {
+  await connectDB();
+
   try {
-    await connectDB();
-    const newCategory = new Category({
-      categoryName: req.body.name,
-      categoryBanner: req.body.categoryBanner, // File path or URL for the banner image
-      categoryLogo: req.file ? `/uploads/${req.file.filename}` : null, // Store the logo image file path
-    });
+    upload.any()(req, async (err) => {
+      if (err) {
+        console.error(err);
+        return Response.json({ message: "Error uploading file" }, 500);
+      }
 
-    const savedCategory = await newCategory.save();
+      const { name, isSocialMedia } = await req.body; // Use req.body instead of req.json()
 
-    res.status(201).json({
-      message: "Category created successfully",
-      category: savedCategory,
+      const logoFile = req.files.find((file) => file.fieldname === "logoFile");
+      const bannerFile = req.files.find(
+        (file) => file.fieldname === "bannerFile"
+      );
+
+      if (!name) {
+        return Response.json({ message: "Name is required" }, 400);
+      }
+
+      const newCategory = new Category({
+        name,
+        isSocialMedia: isSocialMedia === "true", // Convert the string to boolean
+        logoFile: logoFile ? logoFile.buffer.toString("base64") : "",
+        bannerFile: bannerFile ? bannerFile.buffer.toString("base64") : "",
+      });
+
+      await newCategory.save();
+
+      return Response.json(
+        {
+          message: "Category added successfully",
+        },
+        200
+      );
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Category creation failed", message: error.message });
+    console.error(error);
+    return Response.json({ message: "Could not add category" }, 500);
   }
-});
-
-export default apiRoute;
+}
