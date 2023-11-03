@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "@components/sidebar";
 import axios from "axios";
 
@@ -12,21 +12,30 @@ const Page = () => {
     bannerFile: null,
     isSocialMedia: false,
   });
-  console.log(formData);
 
-  const [categoryData, setCategoryData] = useState([
-    {
-      categoryName: " خدمات الانستغرام ",
-      categoryBanner: " بانر الانستغرام ",
-      categoryLogo: " لوغو الانستغرام",
-    },
-    {
-      categoryName: "Category 2",
-      categoryBanner: "Banner 2",
-      categoryLogo: "Logo 2",
-    },
-    // Add more category data as needed
-  ]);
+  const [categoryData, setCategoryData] = useState([]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("/api/getCategories");
+      if (response.ok) {
+        const data = await response.categories();
+        console.log(data);
+        setCategoryData(data.categories); // Assuming the response has a "categories" field
+      } else {
+        console.error("Failed to fetch categories");
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  // Call fetchCategories when your component mounts
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  console.log(categoryData);
+  // Now, categoryData should be an array of categories
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -73,13 +82,6 @@ const Page = () => {
 
       if (response.status === 200) {
         showSuccess();
-        const newCategory = response.data;
-        setCategoryData([...categoryData, newCategory]);
-        setFormData({
-          name: "",
-          logoFile: null,
-          bannerFile: null,
-        });
       } else {
         console.error("فشل إضافة الخدمة");
       }
@@ -87,7 +89,6 @@ const Page = () => {
       console.error("Error:", error);
     }
   };
-
 
   //  const handleEditCategory = (categoryIndex) => {
   //     // Set the category you want to edit
@@ -238,122 +239,115 @@ const Page = () => {
               >
                 إضافة
               </button>
+              <Toaster />
             </div>
           </form>
         </div>
 
-        {/* <div className="max-w-screen-xl mx-auto px-4 md:px-8">
-               <div className="items-start justify-between md:flex">
-                  <div className="max-w-xl mt-4">
-                     <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
-                        الخدمات المتوفرة
-                     </h3>
-                  </div>
-               </div>
-               <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
-                  <table className="w-full table-auto text-sm text-right">
-                     <thead className="bg-gray-50 text-gray-600 font-medium border-b">
-                        <tr>
-                           <th className="py-3 px-6">إسم الخدمة</th>
-                           <th className="py-3 px-6"> بانر الخدمة</th>
-                           <th className="py-3 px-6">لوغو الخدمة</th>
-                           <th className="py-3 px-6"></th>
-                        </tr>
-                     </thead>
-                     <tbody className="text-gray-600 divide-y">
-                        {categoryData.map((category, idx) => (
-                           <tr key={idx}>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                 {formData.editingIndex === idx ? (
-                                    <input
-                                       type="text"
-                                       placeholder="  إسم الخدمة"
-                                       name="name"
-                                       value={formData.name}
-                                       onChange={handleInputChange}
-                                       className="w-40 p-2 border rounded-full focus:outline-blue-400"
-                                    />
-                                 ) : (
-                                    category.categoryName
-                                 )}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                 {formData.editingIndex === idx ? (
-                                    <input
-                                       type="file"
-                                       name="لوغو الخدمة"
-                                       onChange={handleLogoUpload}
-                                       className="w-52 p-2 border rounded-full focus:outline-blue-400"
-                                    />
-                                 ) : (
-                                    category.categoryBanner
-                                 )}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                 {formData.editingIndex === idx ? (
-                                    <input
-                                       type="file"
-                                       name="بانر الخدمة"
-                                       onChange={handleBannerUpload}
-                                       className="w-52 p-2 border rounded-full focus:outline-blue-400"
-                                    />
-                                 ) : (
-                                    category.categoryLogo
-                                 )}
-                              </td>
-                              <td className="text-right px-6 whitespace-nowrap">
-                                 {formData.editingIndex === idx ? (
-                                    <>
-                                       <button
-                                          type="button"
-                                          onClick={handleSaveChanges}
-                                          className="bg-green-500 text-white px-4 py-2 rounded-full me-2 focus:outline-none"
-                                       >
-                                          Save Changes
-                                       </button>
-                                       <button
-                                          type="button"
-                                          onClick={handleDiscardChanges}
-                                          className="bg-red-500 text-white px-4 py-2 rounded-full focus:outline-none"
-                                       >
-                                          Discard Changes
-                                       </button>
-                                    </>
-                                 ) : (
-                                    <>
-                                       <button
-                                          type="button"
-                                          onClick={() =>
-                                             handleEditCategory(idx)
-                                          }
-                                          className="bg-blue-500 text-white px-4 py-2 rounded-full me-2 focus:outline-none"
-                                          disabled={
-                                             formData.editingIndex !== undefined
-                                          }
-                                       >
-                                          Edit
-                                       </button>
-                                       <button
-                                          type="button"
-                                          onClick={() =>
-                                             handleDeleteCategory(idx)
-                                          }
-                                          className="bg-red-500 text-white px-4 py-2 rounded-full focus:outline-none"
-                                          disabled={
-                                             formData.editingIndex !== undefined
-                                          }
-                                       >
-                                          Delete
-                                       </button>
-                                    </>
-                                 )}
-                              </td>
-                           </tr>
-                        ))}
-                     </tbody>
-                  </table>
-               </div>
-            </div> */}
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+          <div className="items-start justify-between md:flex">
+            <div className="max-w-xl mt-4">
+              <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
+                الخدمات المتوفرة
+              </h3>
+            </div>
+          </div>
+          <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
+            <table className="w-full table-auto text-sm text-right">
+              <thead className="bg-gray-50 text-gray-600 font-medium border-b">
+                <tr>
+                  <th className="py-3 px-6">إسم الخدمة</th>
+                  <th className="py-3 px-6"> بانر الخدمة</th>
+                  <th className="py-3 px-6">لوغو الخدمة</th>
+                  <th className="py-3 px-6"></th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-600 divide-y">
+                {categoryData.map((category, idx) => (
+                  <tr key={idx}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {category.editingIndex === idx ? (
+                        <input
+                          type="text"
+                          placeholder="  إسم الخدمة"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          className="w-40 p-2 border rounded-full focus:outline-blue-400"
+                        />
+                      ) : (
+                        category.name
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {category.editingIndex === idx ? (
+                        <input
+                          type="file"
+                          name="لوغو الخدمة"
+                          onChange={handleLogoUpload}
+                          className="w-52 p-2 border rounded-full focus:outline-blue-400"
+                        />
+                      ) : (
+                        category.bannerFile
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {category.editingIndex === idx ? (
+                        <input
+                          type="file"
+                          name="بانر الخدمة"
+                          onChange={handleBannerUpload}
+                          className="w-52 p-2 border rounded-full focus:outline-blue-400"
+                        />
+                      ) : (
+                        category.logoFile
+                      )}
+                    </td>
+                    <td className="text-right px-6 whitespace-nowrap">
+                      {category.editingIndex === idx ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={handleSaveChanges}
+                            className="bg-green-500 text-white px-4 py-2 rounded-full me-2 focus:outline-none"
+                          >
+                            Save Changes
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleDiscardChanges}
+                            className="bg-red-500 text-white px-4 py-2 rounded-full focus:outline-none"
+                          >
+                            Discard Changes
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleEditCategory(idx)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-full me-2 focus:outline-none"
+                            disabled={formData.editingIndex !== undefined}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteCategory(idx)}
+                            className="bg-red-500 text-white px-4 py-2 rounded-full focus:outline-none"
+                            disabled={formData.editingIndex !== undefined}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,13 +1,5 @@
 import React from "react";
 import SideBar from "@components/sidebar";
-import PocketBase from "pocketbase";
-
-const pb = new PocketBase("http://127.0.0.1:8090");
-const records = await pb.collection("users").getFullList({
-  sort: "-created",
-});
-
-console.log(records);
 
 const users = () => {
   const tableItems = [
@@ -61,11 +53,9 @@ const users = () => {
               </tr>
             </thead>
             <tbody className="text-gray-600 divide-y">
-              {records.map((item, idx) => (
+              {tableItems.map((item, idx) => (
                 <tr key={idx}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {item.username}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.email}</td>
                 </tr>
               ))}
