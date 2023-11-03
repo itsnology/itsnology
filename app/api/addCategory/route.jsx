@@ -1,41 +1,48 @@
-import multer from "multer";
-const nextConnect = require("next-connect");
-
 import { connectDB } from "@utils/database";
-import Category from "@models/Category"; // Import your Category model
+import Category from "@models/Category";
+import multer from "multer";
 
-const upload = multer({ dest: "public/uploads/" }); // Define the upload directory
+const path = require("path");
 
-const apiRoute = nextConnect({
-  onError(error, req, res) {
-    res
-      .status(501)
-      .json({ error: `Sorry, something went wrong! ${error.message}` });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../../../public/uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
+const upload = multer({ storage: storage });
 
-apiRoute.use(upload.single("logoFile")); // Use multer to handle the logoFile field
+connectDB();
 
-apiRoute.post(async (req, res) => {
+export async function POST(req, res) {
+  upload.single("logoFile");
+  upload.single("bannerFile");
+
   try {
-    await connectDB();
+    const data = await req.formData();
+    const name = data.get("name");
+    const logoFile = data.get("logoFile");
+    const isSocialMedia = data.get("isSocialMedia");
+    const bannerFile = data.get("bannerFile");
+
     const newCategory = new Category({
-      categoryName: req.body.name,
-      categoryBanner: req.body.categoryBanner, // File path or URL for the banner image
-      categoryLogo: req.file ? `/uploads/${req.file.filename}` : null, // Store the logo image file path
+      name,
+      isSocialMedia, // Convert the string to boolean
+      logoFile: logoFile ? `/uploads/${logoFile.name}` : null,
+      bannerFile: bannerFile ? `/uploads/${bannerFile.name}` : null,
     });
 
     const savedCategory = await newCategory.save();
 
-    res.status(201).json({
-      message: "Category created successfully",
+    return new Response({
+      message: "Category added successfully",
       category: savedCategory,
+      status: 200,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Category creation failed", message: error.message });
+    console.error(error);
+    return new Response({ message: "Could not add category", status: 500 });
   }
-});
-
-export default apiRoute;
+}
