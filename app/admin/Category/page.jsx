@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import SideBar from "@components/sidebar";
+import axios from "axios";
 
 import toast, { Toaster } from "react-hot-toast";
 
@@ -11,20 +12,21 @@ const Page = () => {
     bannerFile: null,
     isSocialMedia: false,
   });
+  console.log(formData);
 
-   const [categoryData, setCategoryData] = useState([
-      {
-         categoryName: " خدمات الانستغرام ",
-         categoryBanner: " بانر الانستغرام ",
-         categoryLogo: " لوغو الانستغرام",
-      },
-      {
-         categoryName: "Category 2",
-         categoryBanner: "Banner 2",
-         categoryLogo: "Logo 2",
-      },
-      // Add more category data as needed
-   ]);
+  const [categoryData, setCategoryData] = useState([
+    {
+      categoryName: " خدمات الانستغرام ",
+      categoryBanner: " بانر الانستغرام ",
+      categoryLogo: " لوغو الانستغرام",
+    },
+    {
+      categoryName: "Category 2",
+      categoryBanner: "Banner 2",
+      categoryLogo: "Logo 2",
+    },
+    // Add more category data as needed
+  ]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -35,25 +37,25 @@ const Page = () => {
     });
   };
 
-   const handleLogoUpload = (e) => {
-      const file = e.target.files[0];
-      setFormData({
-         ...formData,
-         logoFile: file,
-      });
-   };
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
+    setFormData({
+      ...formData,
+      logoFile: file,
+    });
+  };
 
-   const handleBannerUpload = (e) => {
-      const file = e.target.files[0];
-      setFormData({
-         ...formData,
-         bannerFile: file,
-      });
-   };
+  const handleBannerUpload = (e) => {
+    const file = e.target.files[0];
+    setFormData({
+      ...formData,
+      bannerFile: file,
+    });
+  };
 
-   const showSuccess = () => {
-      toast.success("تمت إضافة الخدمة بنجاح");
-   };
+  const showSuccess = () => {
+    toast.success("تمت إضافة الخدمة بنجاح");
+  };
 
   const handleAddCategory = async () => {
     const data = new FormData();
@@ -61,17 +63,17 @@ const Page = () => {
     data.append("logoFile", formData.logoFile);
     data.append("bannerFile", formData.bannerFile);
     data.append("isSocialMedia", formData.isSocialMedia);
-    console.log(data);
 
-      try {
-         const response = await fetch("/api/addCategory", {
-            method: "POST",
-            body: data,
-         });
+    try {
+      const response = await axios.post("/api/addCategory", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-      if (response.ok) {
+      if (response.status === 200) {
         showSuccess();
-        const newCategory = await response.json();
+        const newCategory = response.data;
         setCategoryData([...categoryData, newCategory]);
         setFormData({
           name: "",
@@ -86,112 +88,114 @@ const Page = () => {
     }
   };
 
-   const handleEditCategory = (categoryIndex) => {
-      // Set the category you want to edit
-      const editingCategory = categoryData[categoryIndex];
-      setFormData({
-         name: editingCategory.categoryName,
-         logoFile: null,
-         bannerFile: null,
-         editingIndex: categoryIndex,
-      });
-   };
 
-   const handleSaveChanges = () => {
-      // Implement the logic for saving the edited category here
-      if (formData.editingIndex !== undefined) {
-         const updatedCategories = [...categoryData];
-         const updatedCategoryIndex = formData.editingIndex;
+  //  const handleEditCategory = (categoryIndex) => {
+  //     // Set the category you want to edit
+  //     const editingCategory = categoryData[categoryIndex];
+  //     setFormData({
+  //        name: editingCategory.categoryName,
+  //        logoFile: null,
+  //        bannerFile: null,
+  //        editingIndex: categoryIndex,
+  //     });
+  //  };
 
-         updatedCategories[updatedCategoryIndex] = {
-            categoryName: formData.name,
-            categoryBanner: "Updated Banner", // Update with your logic
-            categoryLogo: "Updated Logo", // Update with your logic
-         };
-         setCategoryData(updatedCategories);
-      }
+  //  const handleSaveChanges = () => {
+  //     // Implement the logic for saving the edited category here
+  //     if (formData.editingIndex !== undefined) {
+  //        const updatedCategories = [...categoryData];
+  //        const updatedCategoryIndex = formData.editingIndex;
 
-      // Reset the form
-      setFormData({
-         name: "",
-         logoFile: null,
-         bannerFile: null,
-      });
-   };
+  //        updatedCategories[updatedCategoryIndex] = {
+  //           categoryName: formData.name,
+  //           categoryBanner: "Updated Banner", // Update with your logic
+  //           categoryLogo: "Updated Logo", // Update with your logic
+  //        };
+  //        setCategoryData(updatedCategories);
+  //     }
 
-   const handleDiscardChanges = () => {
-      // Reset the form
-      setFormData({
-         name: "",
-         logoFile: null,
-         bannerFile: null,
-      });
-   };
+  //     // Reset the form
+  //     setFormData({
+  //        name: "",
+  //        logoFile: null,
+  //        bannerFile: null,
+  //     });
+  //  };
 
-   const handleDeleteCategory = (categoryIndex) => {
-      // Implement the logic for deleting the category at the specified index
-      const updatedCategories = [...categoryData];
-      updatedCategories.splice(categoryIndex, 1);
-      setCategoryData(updatedCategories);
-   };
+  //  const handleDiscardChanges = () => {
+  //     // Reset the form
+  //     setFormData({
+  //        name: "",
+  //        logoFile: null,
+  //        bannerFile: null,
+  //     });
+  //  };
 
-   return (
-      <div className="flex md:flex-row ">
-         <SideBar />
-         <div className="flex mx-auto mt-28 lg:ms-8 flex-col">
-            <div className="flex-col flex ">
-               <div className="justify-center flex">
-                  {" "}
-                  <p className="text-6xl font-semibold text-sky-950 mb-4">
-                     {" "}
-                     إدارة الخدمات
-                  </p>
-               </div>
+  //  const handleDeleteCategory = (categoryIndex) => {
+  //     // Implement the logic for deleting the category at the specified index
+  //     const updatedCategories = [...categoryData];
+  //     updatedCategories.splice(categoryIndex, 1);
+  //     setCategoryData(updatedCategories);
+  //  };
 
-               <form
-                  onSubmit={(e) => {
-                     e.preventDefault();
-                     handleSaveChanges();
-                  }}
-                  method="POST"
-                  className="mt-4 flex items-center flex-col lg:flex-row"
-               >
-                  <div className="me-2 mb-1">
-                     <label
-                        htmlFor="name"
-                        className="block text-sm mb-2 font-medium text-gray-700"
-                     >
-                        إسم الخدمة
-                     </label>
-                     <input
-                        type="text"
-                        id="name"
-                        placeholder="  إسم الخدمة"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="w-64 p-2 border rounded-full focus:outline-blue-400"
-                        required
-                        disabled={formData.editingIndex !== undefined}
-                     />
-                  </div>
+  return (
+    <div className="flex md:flex-row ">
+      <SideBar />
+      <div className="flex mx-auto mt-28 lg:ms-8 flex-col">
+        <div className="flex-col flex ">
+          <div className="justify-center flex">
+            {" "}
+            <p className="text-6xl font-semibold text-sky-950 mb-4">
+              {" "}
+              إدارة الخدمات
+            </p>
+          </div>
 
-                  <div className="me-2 mb-1">
-                     <label
-                        htmlFor="logo"
-                        className="block text-sm mb-2 font-medium text-gray-700"
-                     >
-                        لوغو الخدمة
-                     </label>
-                     <input
-                        type="file"
-                        id="logo"
-                        name="لوغو الخدمة"
-                        onChange={handleLogoUpload}
-                        className="w-64 p-2 border rounded-full focus:outline-blue-400"
-                        disabled={formData.editingIndex !== undefined}
-                     />
-                  </div>
+          <form
+            enctype="multipart/form-data"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleAddCategory();
+            }}
+            method="POST"
+            className="mt-4 flex items-center flex-col lg:flex-row"
+          >
+            <div className="me-2 mb-1">
+              <label
+                htmlFor="name"
+                className="block text-sm mb-2 font-medium text-gray-700"
+              >
+                إسم الخدمة
+              </label>
+              <input
+                type="text"
+                id="name"
+                placeholder="  إسم الخدمة"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="w-64 p-2 border rounded-full focus:outline-blue-400"
+                required
+                disabled={formData.editingIndex !== undefined}
+              />
+            </div>
+
+            <div className="me-2 mb-1">
+              <label
+                htmlFor="logo"
+                className="block text-sm mb-2 font-medium text-gray-700"
+              >
+                لوغو الخدمة
+              </label>
+              <input
+                type="file"
+                id="logo"
+                name="لوغو الخدمة"
+                onChange={handleLogoUpload}
+                className="w-64 p-2 border rounded-full focus:outline-blue-400"
+                disabled={formData.editingIndex !== undefined}
+              />
+            </div>
 
             <div className="me-2 mb-1">
               <label
@@ -226,19 +230,19 @@ const Page = () => {
               />
             </div>
 
-                  <div className="flex mt-4">
-                     <button
-                        type="submit"
-                        onClick={handleAddCategory}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-full focus:outline-none me-2"
-                     >
-                        إضافة
-                     </button>
-                  </div>
-               </form>
+            <div className="flex mt-4">
+              <button
+                type="submit"
+                onClick={handleAddCategory}
+                className="bg-blue-500 text-white px-4 py-2 rounded-full focus:outline-none me-2"
+              >
+                إضافة
+              </button>
             </div>
+          </form>
+        </div>
 
-            <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+        {/* <div className="max-w-screen-xl mx-auto px-4 md:px-8">
                <div className="items-start justify-between md:flex">
                   <div className="max-w-xl mt-4">
                      <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
@@ -349,10 +353,10 @@ const Page = () => {
                      </tbody>
                   </table>
                </div>
-            </div>
-         </div>
+            </div> */}
       </div>
-   );
+    </div>
+  );
 };
 
 export default Page;

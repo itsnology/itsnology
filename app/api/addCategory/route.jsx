@@ -1,57 +1,50 @@
 import { connectDB } from "@utils/database";
 import Category from "@models/Category";
 
-const multer = require("multer");
+import multer from "multer";
+const util = require("util"); // You need to use the 'util' module to promisify the upload function
+
+const path = require("path");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Specify the directory where you want to save the uploaded files
-    cb(null, "../../../public/uploads"); // 'uploads/' is the directory name
+    const destinationPath = path.resolve(__dirname, "../../../public/uploads");
+    cb(null, destinationPath);
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
-const upload = multer({ storage: storage });
+connectDB(); // Promisify the multer upload function
 
-export async function POST(req) {
-  await connectDB();
-
+export async function POST(req, next) {
   try {
-    upload.any()(req, async (err) => {
-      if (err) {
-        console.error(err);
-        return Response.json({ message: "Error uploading file" }, 500);
-      }
+    const data = await req.formData();
+    const name = data.get("name");
+    const logoFile = data.get("logoFile");
+    const isSocialMedia = data.get("isSocialMedia");
+    const bannerFile = data.get("bannerFile");
 
-      const { name, isSocialMedia } = await req.body; // Use req.body instead of req.json()
+    console.log(data);
+    console.log(logoFile);
+    console.log(isSocialMedia);
 
-      const logoFile = req.files.find((file) => file.fieldname === "logoFile");
-      const bannerFile = req.files.find(
-        (file) => file.fieldname === "bannerFile"
-      );
-
-      if (!name) {
-        return Response.json({ message: "Name is required" }, 400);
-      }
-
-      const newCategory = new Category({
-        name,
-        isSocialMedia: isSocialMedia === "true", // Convert the string to boolean
-        logoFile: logoFile ? logoFile.buffer.toString("base64") : "",
-        bannerFile: bannerFile ? bannerFile.buffer.toString("base64") : "",
-      });
-
-      await newCategory.save();
-
-      return Response.json(
-        {
-          message: "Category added successfully",
-        },
-        200
-      );
+    const newCategory = new Category({
+      name,
+      isSocialMedia, // Convert the string to boolean
+      logoFile: logoFile ? logoFile.buffer.toString("base64") : "",
+      bannerFile: bannerFile ? bannerFile.buffer.toString("base64") : "",
     });
+
+    await newCategory.save();
+
+    return Response.json(
+      {
+        message: "Category added successfully",
+      },
+      200
+    );
   } catch (error) {
     console.error(error);
     return Response.json({ message: "Could not add category" }, 500);
