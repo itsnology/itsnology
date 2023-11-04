@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "@components/sidebar";
 import Image from "next/image";
-import lolimg from "public/uploads/16990093675011678878541946.jpeg";
 import toast, { Toaster } from "react-hot-toast";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import Swal from "sweetalert2";
 
 const Page = () => {
    const [formData, setFormData] = useState({
@@ -11,7 +12,10 @@ const Page = () => {
       logoFile: null,
       bannerFile: null,
       isSocialMedia: false,
+      editingIndex: undefined,
    });
+
+   //! fetch All categories
 
    const [categoryData, setCategoryData] = useState([]);
 
@@ -20,7 +24,7 @@ const Page = () => {
          const response = await fetch("/api/category", { cach: "no-store" });
          if (response.ok) {
             const data = await response.json();
-            console.log(data);
+
             setCategoryData(data); // Assuming the response has a "categories" field
          } else {
             console.error("Failed to fetch categories");
@@ -34,7 +38,7 @@ const Page = () => {
    useEffect(() => {
       fetchCategories();
    }, []);
-   console.log(categoryData);
+
    // Now, categoryData should be an array of categories
 
    const handleInputChange = (e) => {
@@ -66,6 +70,8 @@ const Page = () => {
       toast.success("تمت إضافة الخدمة بنجاح");
    };
 
+   //! Add a category
+
    const handleAddCategory = async () => {
       const data = new FormData();
       data.append("name", formData.name);
@@ -89,54 +95,104 @@ const Page = () => {
       }
    };
 
-   //  const handleEditCategory = (categoryIndex) => {
-   //     // Set the category you want to edit
-   //     const editingCategory = categoryData[categoryIndex];
-   //     setFormData({
-   //        name: editingCategory.categoryName,
-   //        logoFile: null,
-   //        bannerFile: null,
-   //        editingIndex: categoryIndex,
-   //     });
-   //  };
+   //! Edit a category
+   const useSearchParam = useSearchParams();
+   const catid = useSearchParam.get("id");
 
-   //  const handleSaveChanges = () => {
-   //     // Implement the logic for saving the edited category here
-   //     if (formData.editingIndex !== undefined) {
-   //        const updatedCategories = [...categoryData];
-   //        const updatedCategoryIndex = formData.editingIndex;
+   const router = useRouter();
 
-   //        updatedCategories[updatedCategoryIndex] = {
-   //           categoryName: formData.name,
-   //           categoryBanner: "Updated Banner", // Update with your logic
-   //           categoryLogo: "Updated Logo", // Update with your logic
-   //        };
-   //        setCategoryData(updatedCategories);
-   //     }
+   const EditSubmit = async (e) => {
+      // Add your logic for handling form submission here
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("logoFile", formData.logoFile);
+      data.append("bannerFile", formData.bannerFile);
+      data.append("isSocialMedia", formData.isSocialMedia);
 
-   //     // Reset the form
-   //     setFormData({
-   //        name: "",
-   //        logoFile: null,
-   //        bannerFile: null,
-   //     });
-   //  };
+      if (!formData.editingIndex) return alert("No editing index");
+      try {
+         const res = await fetch(`/api/category/editCat/${catid}`, {
+            method: "PATCH",
+            body: data,
+         });
 
-   //  const handleDiscardChanges = () => {
-   //     // Reset the form
-   //     setFormData({
-   //        name: "",
-   //        logoFile: null,
-   //        bannerFile: null,
-   //     });
-   //  };
+         if (res.ok) {
+            router.push("/admin/Category");
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
 
-   //  const handleDeleteCategory = (categoryIndex) => {
-   //     // Implement the logic for deleting the category at the specified index
-   //     const updatedCategories = [...categoryData];
-   //     updatedCategories.splice(categoryIndex, 1);
-   //     setCategoryData(updatedCategories);
-   //  };
+   //edit buttons
+
+   const deletePrompt = async (category) => {
+      try {
+         const confirm = await Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+         });
+
+         if (confirm.isConfirmed) {
+            const response = await fetch(
+               `/api/category/editCat/${category._id}`,
+               {
+                  method: "DELETE",
+               }
+            );
+
+            if (response.ok) {
+               const filteredCategories = categoryData.filter(
+                  (item) => item._id !== category._id
+               );
+               setCategoryData(filteredCategories);
+               Swal.fire(
+                  "Deleted!",
+                  "Your category has been deleted.",
+                  "success"
+               );
+            } else {
+               throw new Error("Failed to delete category.");
+            }
+         }
+      } catch (error) {
+         console.error(error);
+         Swal.fire(
+            "Error",
+            "An error occurred while deleting the category.",
+            "error"
+         );
+      }
+   };
+   //! Edit button
+
+   const handleEditCategory = (categoryId) => {
+      router.push(`/admin/Category?id=${categoryId}`);
+      const category = categoryData.find((cat) => cat._id === categoryId);
+      setFormData({
+         name: category.name,
+         logoFile: category.logoFile,
+         bannerFile: category.bannerFile,
+         isSocialMedia: category.isSocialMedia,
+         editingIndex: categoryId,
+      });
+   };
+
+   const handleCancelEdit = () => {
+      router.push("/admin/Category");
+      setFormData({
+         name: "",
+         logoFile: null,
+         bannerFile: null,
+         isSocialMedia: false,
+         editingIndex: undefined,
+      });
+   };
 
    return (
       <div className="flex md:flex-row ">
@@ -155,7 +211,11 @@ const Page = () => {
                   encType="multipart/form-data"
                   onSubmit={(e) => {
                      e.preventDefault();
-                     handleAddCategory();
+                     if (formData.editingIndex !== undefined) {
+                        EditSubmit();
+                     } else {
+                        handleAddCategory();
+                     }
                   }}
                   method="POST"
                   className="mt-4 flex items-center flex-col lg:flex-row"
@@ -176,7 +236,6 @@ const Page = () => {
                         onChange={handleInputChange}
                         className="w-64 p-2 border rounded-full focus:outline-blue-400"
                         required
-                        disabled={formData.editingIndex !== undefined}
                      />
                   </div>
 
@@ -193,7 +252,7 @@ const Page = () => {
                         name="لوغو الخدمة"
                         onChange={handleLogoUpload}
                         className="w-64 p-2 border rounded-full focus:outline-blue-400"
-                        disabled={formData.editingIndex !== undefined}
+                        required
                      />
                   </div>
 
@@ -209,8 +268,8 @@ const Page = () => {
                         id="banner"
                         name="بانر الخدمة"
                         onChange={handleBannerUpload}
+                        required
                         className="w-64 p-2 border rounded-full focus:outline-blue-400"
-                        disabled={formData.editingIndex !== undefined}
                      />
                   </div>
                   <div className="me-2 ms-2 mb-5">
@@ -235,8 +294,19 @@ const Page = () => {
                         type="submit"
                         className="bg-blue-500 text-white px-4 py-2 rounded-full focus:outline-none me-2"
                      >
-                        إضافة
+                        {formData.editingIndex !== undefined
+                           ? "تعديل"
+                           : "إضافة"}
                      </button>
+                     {formData.editingIndex !== undefined && (
+                        <button
+                           type="button"
+                           className="bg-red-500 text-white px-4 py-2 rounded-full focus:outline-none"
+                           onClick={handleCancelEdit}
+                        >
+                           إلغاء التعديل
+                        </button>
+                     )}
                      <Toaster />
                   </div>
                </form>
@@ -288,7 +358,7 @@ const Page = () => {
                                  ) : (
                                     <div
                                        style={{
-                                          backgroundImage: `url(/uploads/${category.bannerFile})`,
+                                          backgroundImage: `url(/uploads/${category.logoFile})`,
                                           height: "100px",
                                           width: "100px",
                                           backgroundSize: "cover",
@@ -305,7 +375,14 @@ const Page = () => {
                                        className="w-52 p-2 border rounded-full focus:outline-blue-400"
                                     />
                                  ) : (
-                                    category.bannerFile
+                                    <div
+                                       style={{
+                                          backgroundImage: `url(/uploads/${category.bannerFile})`,
+                                          height: "100px",
+                                          width: "100px",
+                                          backgroundSize: "cover",
+                                       }}
+                                    ></div>
                                  )}
                               </td>
                               <td className="text-right px-6 whitespace-nowrap">
@@ -331,24 +408,16 @@ const Page = () => {
                                        <button
                                           type="button"
                                           onClick={() =>
-                                             handleEditCategory(idx)
+                                             handleEditCategory(category._id)
                                           }
                                           className="bg-blue-500 text-white px-4 py-2 rounded-full me-2 focus:outline-none"
-                                          disabled={
-                                             formData.editingIndex !== undefined
-                                          }
                                        >
                                           Edit
                                        </button>
                                        <button
                                           type="button"
-                                          onClick={() =>
-                                             handleDeleteCategory(idx)
-                                          }
+                                          onClick={() => deletePrompt(category)}
                                           className="bg-red-500 text-white px-4 py-2 rounded-full focus:outline-none"
-                                          disabled={
-                                             formData.editingIndex !== undefined
-                                          }
                                        >
                                           Delete
                                        </button>
