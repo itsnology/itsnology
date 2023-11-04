@@ -74,7 +74,7 @@ const Users = () => {
                </thead>
                <tbody>
                   {users.map((user) => (
-                     <React.Fragment key={user.id} id={user.id}>
+                     <div key={user.id} id={user.id}>
                         <tr
                            className={`border-b border-gray-200 cursor-pointer ${
                               expandedRow === user.id
@@ -129,7 +129,7 @@ const Users = () => {
                               </td>
                            </tr>
                         )}
-                     </React.Fragment>
+                     </div>
                   ))}
                </tbody>
             </table>

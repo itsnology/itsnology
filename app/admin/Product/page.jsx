@@ -1,65 +1,48 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "@components/sidebar";
 import SocialMedia from "@components/adminComponents/socialmedia";
 import CardService from "@components/adminComponents/cardservice";
 
-const products = [
-   {
-      name: "زيادة الإعجابات على إنستغرام",
-      category: "وسائل التواصل الاجتماعي",
-      type: "خدمات إنستغرام",
-   },
-   {
-      name: "تصميم بطاقة العمل",
-      category: "بطاقة المنتج",
-      type: "خدمات التصميم",
-   },
-   {
-      name: "حملة إعلانية على فيسبوك",
-      category: "وسائل التواصل الاجتماعي",
-      type: "خدمات فيسبوك",
-   },
-   {
-      name: "تيشيرت مخصص",
-      category: "بطاقة المنتج",
-      type: "الملابس",
-   },
-   {
-      name: "متابعون على تويتر",
-      category: "وسائل التواصل الاجتماعي",
-      type: "خدمات تويتر",
-   },
-];
-
 const Page = () => {
+   const [categoryData, setCategoryData] = useState([]);
    const [selectedCategory, setSelectedCategory] = useState("");
    const [selectedType, setSelectedType] = useState("");
    const [selectedProduct, setSelectedProduct] = useState("");
+
+   const fetchCategories = async () => {
+      try {
+         const response = await fetch("/api/category", { cach: "no-store" });
+         if (response.ok) {
+            const data = await response.json();
+
+            setCategoryData(data); // Assuming the response has a "categories" field
+         } else {
+            console.error("Failed to fetch categories");
+         }
+      } catch (error) {
+         console.error("Error fetching categories:", error);
+      }
+   };
+
+   // Call fetchCategories when your component mounts
+   useEffect(() => {
+      fetchCategories();
+   }, []);
 
    const handleCategoryChange = (category) => {
       setSelectedCategory(category);
       setSelectedType("");
    };
+   console.log("Categorie sgeged fetched:", categoryData);
 
    const handleTypeChange = (type) => {
       setSelectedType(type);
    };
 
-   const filteredProducts = products.filter((product) => {
-      if (selectedCategory === "" && selectedType === "") {
-         return true;
-      } else if (selectedCategory === "" && selectedType !== "") {
-         return product.type === selectedType;
-      } else if (selectedCategory !== "" && selectedType === "") {
-         return product.category === selectedCategory;
-      } else {
-         return (
-            product.category === selectedCategory &&
-            product.type === selectedType
-         );
-      }
-   });
+   let isSocialMedia = true
+      ? selectedCategory === "وسائل التواصل الاجتماعي"
+      : false;
 
    return (
       <div className="flex md:flex-row">
@@ -108,34 +91,39 @@ const Page = () => {
                      value={selectedType}
                      onChange={(e) => handleTypeChange(e.target.value)}
                   >
-                     <option value="الكل">الكل</option>
-                     <option value="خدمات إنستغرام">خدمات إنستغرام</option>
-                     <option value="خدمات التصميم">خدمات التصميم</option>
-                     <option value="خدمات فيسبوك">خدمات فيسبوك</option>
-                     <option value="الملابس">الملابس</option>
-                     <option value="خدمات تويتر">خدمات تويتر</option>
+                     <option value="" disabled></option>
+                     {categoryData.map((category) => (
+                        <option value={category.name} id={category._id}>
+                           {category.name}
+                        </option>
+                     ))}
                   </select>
                </div>
-               {/* <div className="my-4">
-               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  بحث
-               </button>
-            </div> */}
             </div>
             <div className="my-4">
-               {selectedCategory == "وسائل التواصل الاجتماعي" ? (
+               {isSocialMedia ? (
                   <SocialMedia
                      productName={selectedProduct}
                      type={selectedCategory}
-                     category={selectedType}
+                     categoryId={
+                        categoryData.find(
+                           (category) => category.name === selectedCategory
+                        )?.id
+                     }
+                     categoryName={selectedCategory}
                   />
-               ) : selectedCategory == "" ? (
+               ) : selectedCategory === "" ? (
                   <div>لا يوجد منتجات</div>
                ) : (
                   <CardService
                      productName={selectedProduct}
-                     type={selectedCategory}
-                     category={selectedType}
+                     type={selectedType}
+                     categoryId={
+                        categoryData.find(
+                           (category) => category.name === selectedCategory
+                        )?.id
+                     }
+                     categoryName={selectedCategory}
                   />
                )}
             </div>

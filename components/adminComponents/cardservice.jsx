@@ -1,33 +1,75 @@
 "use client";
 import { useState } from "react";
 
-const CardService = ({ productName, category }) => {
+const CardService = ({ productName, categoryName, categoryId }) => {
    const [price, setPrice] = useState("");
    const [photo, setPhoto] = useState("");
    const [codes, setCodes] = useState([]);
    const [selectedProduct, setSelectedProduct] = useState(productName);
    const [count, setCount] = useState(0);
 
+   const [formData, setFormData] = useState({
+      category: categoryId,
+      categoryName: categoryName,
+      name: selectedProduct,
+      price: price,
+      cardCodes: codes,
+      image: null,
+   });
+
+   const handleAddProduct = async () => {
+      const data = new FormData();
+      data.append("category", categoryId);
+      data.append("categoryName", categoryName);
+      data.append("name", selectedProduct);
+      data.append("price", price);
+      data.append("cardCodes", codes);
+      data.append("image", photo);
+
+      try {
+         const response = await fetch("/api/cards/addCard", {
+            method: "POST",
+            body: data,
+         });
+
+         if (response.status === 200) {
+            showSuccess();
+         } else {
+            console.error("فشل إضافة المنتج");
+         }
+      } catch (error) {
+         console.error("Error:", error);
+      }
+   };
+
    const handleNameChange = (e) => {
-      setName(e.target.value);
+      setSelectedProduct(e.target.value);
    };
 
    const handlePriceChange = (e) => {
       setPrice(e.target.value);
    };
 
+   // const handlePhotoChange = (e) => {
+   //    setPhoto(e.target.value);
+   // };
+
    const handlePhotoChange = (e) => {
-      setPhoto(e.target.value);
+      const file = e.target.files[0];
+      setFormData({
+         ...formData,
+         image: file,
+      });
    };
 
    const handleCodeChange = (e, index) => {
       const newCodes = [...codes];
-      newCodes[index][e.target.name] = e.target.value;
+      newCodes[index] = e.target.value;
       setCodes(newCodes);
    };
 
    const handleAddCode = () => {
-      setCodes([...codes, { code: "", data: "" }]);
+      setCodes([...codes, ""]);
       setCount(count + 1); // increment count when a code is added
    };
 
@@ -39,12 +81,13 @@ const CardService = ({ productName, category }) => {
    };
    const handleSubmit = (e) => {
       e.preventDefault();
+      handleAddProduct();
    };
 
    return (
       <div className="flex flex-col  justify-center py-2">
          <h1 className="text-2xl font-bold mb-4">
-            إضافة منتج لخدمات لـ {category}
+            إضافة منتج لخدمات لـ {categoryName}
          </h1>
          <form onSubmit={handleSubmit} className="w-full max-w-lg">
             <div className="flex flex-wrap -mx-3 mb-6">
@@ -61,8 +104,8 @@ const CardService = ({ productName, category }) => {
                         id="name"
                         type="text"
                         placeholder="اسم المنتج"
-                        value={productName}
-                        onChange={(e) => setSelectedProduct(e.target.value)}
+                        value={selectedProduct}
+                        onChange={handleNameChange}
                      />
 
                      <p className="appearance-none block   bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
@@ -102,7 +145,6 @@ const CardService = ({ productName, category }) => {
                      id="photo"
                      type="file"
                      placeholder="صورة البطاقة"
-                     value={photo}
                      onChange={handlePhotoChange}
                   />
                </div>
@@ -113,7 +155,6 @@ const CardService = ({ productName, category }) => {
                      <thead>
                         <tr>
                            <th className="px-4 py-2">الكود</th>
-                           <th className="px-4 py-2">البيانات</th>
                            <th className="px-4 py-2"></th>
                         </tr>
                      </thead>
@@ -124,19 +165,8 @@ const CardService = ({ productName, category }) => {
                                  <input
                                     className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     type="text"
-                                    name="code"
                                     placeholder="الكود"
-                                    value={code.code}
-                                    onChange={(e) => handleCodeChange(e, index)}
-                                 />
-                              </td>
-                              <td className="border px-4 py-2">
-                                 <input
-                                    className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    type="text"
-                                    name="data"
-                                    placeholder="البيانات"
-                                    value={code.data}
+                                    value={code}
                                     onChange={(e) => handleCodeChange(e, index)}
                                  />
                               </td>

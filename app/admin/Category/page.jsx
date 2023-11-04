@@ -124,18 +124,18 @@ const Page = () => {
       }
    };
 
-   //edit buttons
+   //!delete buttons
 
    const deletePrompt = async (category) => {
       try {
          const confirm = await Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
+            title: "هل أنت متأكد؟",
+            text: "لن تتمكن من التراجع عن هذا!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
+            confirmButtonText: "نعم، احذفه!",
          });
 
          if (confirm.isConfirmed) {
@@ -151,22 +151,14 @@ const Page = () => {
                   (item) => item._id !== category._id
                );
                setCategoryData(filteredCategories);
-               Swal.fire(
-                  "Deleted!",
-                  "Your category has been deleted.",
-                  "success"
-               );
+               Swal.fire("تم الحذف!", "تم حذف الفئة الخاصة بك.", "success");
             } else {
-               throw new Error("Failed to delete category.");
+               throw new Error("فشل في حذف الفئة.");
             }
          }
       } catch (error) {
          console.error(error);
-         Swal.fire(
-            "Error",
-            "An error occurred while deleting the category.",
-            "error"
-         );
+         Swal.fire("خطأ", "حدث خطأ أثناء حذف الفئة.", "error");
       }
    };
    //! Edit button
