@@ -7,8 +7,7 @@ export async function GET(req, res) {
   try {
     const Keywords = await Keyword.find();
 
-    console.log(Keywords);
-    return new Response({ Keywords }, 200);
+    return new Response(JSON.stringify(Keywords), { status: 200 });
   } catch (error) {
     console.error(error);
     return new Response(

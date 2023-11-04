@@ -15,6 +15,11 @@ const Page = () => {
   const showSuccess = () => {
     toast.success("Keyword added successfully");
   };
+  const showDelete = () => {
+    toast.success("Keyword Deleted successfully", {
+      icon: "👏",
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,14 +33,20 @@ const Page = () => {
         body: JSON.stringify(formData),
       });
 
+      // Inside the handleSubmit function
       if (response.ok) {
         showSuccess();
 
         // Update the keywords list with the newly added keyword
-        setKeywords([...keywords, formData.name]);
+        const newKeyword = {
+          id: response.id, // Replace 'response.id' with the actual ID if available
+          name: formData.name,
+        };
+        setKeywords([...keywords, newKeyword]);
 
         // Clear the form input
         setFormData({ name: "" });
+        window.location.reload();
       } else {
         console.error("Failed to add Keyword");
       }
@@ -49,14 +60,21 @@ const Page = () => {
     const fetchKeywords = async () => {
       try {
         const response = await fetch("/api/Seo/getKeyword", {
-          cach: "no-store",
+          cache: "no-store",
         });
 
         if (response.ok) {
           const data = await response.json();
-
-          // Update the keywords list with the fetched data
-          setKeywords(data.keywords);
+          // Ensure data is an array and then extract the "name" and "id" fields
+          if (Array.isArray(data)) {
+            const keywordData = data.map((keyword) => ({
+              id: keyword._id, // Store the ID of the keyword
+              name: keyword.name,
+            }));
+            setKeywords(keywordData);
+          } else {
+            console.error("Fetched data is not an array");
+          }
         } else {
           console.error("Failed to fetch Keywords");
         }
@@ -67,6 +85,29 @@ const Page = () => {
 
     fetchKeywords();
   }, []);
+
+  const handleDeleteKeyword = async (index, id) => {
+    try {
+      const response = await fetch("/api/Seo/deleteKeyword", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }), // Pass the keyword ID to delete
+      });
+
+      if (response.ok) {
+        showDelete();
+        const updatedKeywords = [...keywords];
+        updatedKeywords.splice(index, 1);
+        setKeywords(updatedKeywords);
+      } else {
+        console.error("Failed to delete the keyword");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="flex md:flex-row">
@@ -106,12 +147,13 @@ const Page = () => {
             {keywords.map((keyword, index) => (
               <div className="relative mb-5 ml-6" key={index}>
                 <p className="text-gray-600 font-medium p-4 rounded-md bg-gray-200 relative">
-                  {keyword}
+                  {keyword.name}
                 </p>
                 <IconX
                   className="w-4 h-4 absolute top-1 right-1 text-gray-700 hover:text-red-500 cursor-pointer"
-                  onClick={() => handleDeleteKeyword(index)}
+                  onClick={() => handleDeleteKeyword(index, keyword.id)} // Pass the 'id' parameter
                 />
+                <Toaster />
               </div>
             ))}
           </div>
