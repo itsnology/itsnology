@@ -5,8 +5,7 @@ export async function POST(request) {
       const data = await request.json();
       const email = data.email;
       const otp = data.generatedOtp;
-      console.log(email);
-      console.log(otp);
+
 
       const transporter = nodemailer.createTransport({
          service: "Gmail",

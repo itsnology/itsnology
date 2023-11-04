@@ -21,10 +21,10 @@ export const POST = async (req, res) => {
 
    const bufferLogo = Buffer.from(await logoFile.arrayBuffer());
    const filenameLogo = Date.now() + logoFile.name.replaceAll(" ", "_");
-   console.log(filenameLogo);
+
    try {
       await writeFile(
-         path.join(process.cwd(), "public/uploads/" + filenameLogo),
+         path.join(process.cwd(), "/public/uploads/" + filenameLogo),
          bufferLogo
       );
    } catch (error) {
@@ -35,7 +35,6 @@ export const POST = async (req, res) => {
    const bufferBanner = Buffer.from(await bannerFile.arrayBuffer());
    const filenameBanner = Date.now() + bannerFile.name.replaceAll(" ", "_");
 
-   console.log(filenameBanner);
    try {
       await writeFile(
          path.join(process.cwd(), "/public/uploads/" + filenameBanner),

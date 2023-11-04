@@ -39,7 +39,6 @@ const CardService = ({ productName, category }) => {
    };
    const handleSubmit = (e) => {
       e.preventDefault();
-      console.log({ name, price, photo, codes });
    };
 
    return (
