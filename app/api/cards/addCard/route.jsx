@@ -14,7 +14,7 @@ export const POST = async (req, res) => {
    const photo = formData.get("image");
    const categoryName = formData.get("categoryName");
 
-   if (!category || !selectedProduct || !price || !codes || !photo) {
+   if (!category || !selectedProduct || !price || !photo) {
       return NextResponse.json(
          { error: "Missing required fields." },
          { status: 400 }

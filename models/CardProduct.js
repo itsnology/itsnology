@@ -26,6 +26,8 @@ const cardProductSchema = new mongoose.Schema({
    },
 });
 
-const CardProduct = mongoose.model("CardProduct", cardProductSchema);
+export const CardProduct =
+   mongoose.models.CardProduct ||
+   mongoose.model("CardProduct", cardProductSchema);
 
 module.exports = CardProduct;
