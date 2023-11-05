@@ -7,6 +7,7 @@ const CardService = ({ categoryName, categoryId, productName }) => {
    const [codes, setCodes] = useState([]);
    const [count, setCount] = useState(0);
    const [photo, setPhoto] = useState(null);
+   const [isEditing, setIsEditing] = useState(false); // add state for editing
 
    const [formData, setFormData] = useState({
       category: categoryId,
@@ -48,6 +49,37 @@ const CardService = ({ categoryName, categoryId, productName }) => {
       }
    };
 
+   const handleEditProduct = async () => {
+      // add function for editing product
+      const data = new FormData();
+      data.append("category", categoryId);
+      data.append("categoryName", categoryName);
+      data.append("name", formData.name);
+      data.append("price", formData.price);
+      data.append("cardCodes", formData.cardCodes);
+      data.append("image", formData.image);
+
+      const showSuccess = () => {
+         toast.success("تم تعديل الخدمة بنجاح");
+      };
+
+      try {
+         const response = await fetch(`/api/cards/editCard/${categoryId}`, {
+            // use categoryId for editing
+            method: "PATCH", // use PATCH method for editing
+            body: data,
+         });
+
+         if (response.status === 200) {
+            showSuccess();
+         } else {
+            console.error("فشل تعديل المنتج");
+         }
+      } catch (error) {
+         console.error("Error:", error);
+      }
+   };
+
    const handleNameChange = (e) => {
       setFormData({
          ...formData,
@@ -69,31 +101,6 @@ const CardService = ({ categoryName, categoryId, productName }) => {
          image: file,
       });
    };
-
-   // const handleCodeChange = (e, index) => {
-   //    const newCodes = [...formData.cardCodes];
-   //    newCodes[index] = e.target.value;
-   //    setFormData({
-   //       ...formData,
-   //       cardCodes: newCodes,
-   //    });
-   // };
-
-   // const handleAddCode = () => {
-   //    setFormData({
-   //       ...formData,
-   //       cardCodes: [...formData.cardCodes, ""],
-   //    });
-   // };
-
-   // const handleDeleteCode = (index) => {
-   //    const newCodes = [...formData.cardCodes];
-   //    newCodes.splice(index, 1);
-   //    setFormData({
-   //       ...formData,
-   //       cardCodes: newCodes,
-   //    });
-   // };
 
    const handleCodeChange = (e, index) => {
       const newCodes = [...codes];
@@ -127,13 +134,19 @@ const CardService = ({ categoryName, categoryId, productName }) => {
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      handleAddProduct();
+      if (isEditing) {
+         // check if editing
+         handleEditProduct();
+      } else {
+         handleAddProduct();
+      }
    };
 
    return (
       <div className="flex flex-col  justify-center py-2">
          <h1 className="text-2xl font-bold mb-4">
-            إضافة منتج لخدمات لـ {categoryName}
+            {isEditing ? "تعديل" : "إضافة"} منتج لخدمات لـ {categoryName}{" "}
+            {/* change heading based on editing state */}
          </h1>
          <form onSubmit={handleSubmit} className="w-full max-w-lg">
             <div className="flex flex-wrap -mx-3 mb-6">
@@ -238,8 +251,18 @@ const CardService = ({ categoryName, categoryId, productName }) => {
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                >
-                  إضافة المنتج
+                  {isEditing ? "تعديل" : "إضافة"} المنتج{" "}
+                  {/* change button text based on editing state */}
                </button>
+               {isEditing && ( // show cancel button only when editing
+                  <button
+                     type="button"
+                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4"
+                     onClick={handleCancelEdit}
+                  >
+                     إلغاء التعديل
+                  </button>
+               )}
             </div>
             <Toaster />
          </form>
