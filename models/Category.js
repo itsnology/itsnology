@@ -2,11 +2,23 @@
 import mongoose from "mongoose";
 
 const categorySchema = new mongoose.Schema({
-  name: String,
-  logoFile: String,
-  bannerFile: String,
-  isSocialMedia: Boolean,
+   name: {
+      type: String,
+      required: true,
+      unique: true,
+   },
+   logoFile: {
+      type: String,
+      required: true,
+   },
+   bannerFile: {
+      type: String,
+      required: true,
+   },
+   isSocialMedia: {
+      type: Boolean,
+   },
 });
 
 export default mongoose.models.Category ||
-  mongoose.model("Category", categorySchema);
+   mongoose.model("Category", categorySchema);

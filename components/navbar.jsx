@@ -13,7 +13,6 @@ const AvatarMenu = () => {
    const profileRef = useRef();
 
    const { data: session } = useSession();
-   console.log(session);
 
    useEffect(() => {
       const handleDropDown = (e) => {
