@@ -3,13 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Skeleton from "@components/Skeleton";
+import Skeleton from "@components/skeleton";
 import Navbar from "@components/navbar";
 import { useParams, useSearchParams } from "next/navigation";
 
 const Service = () => {
    const [isLoading, setIsLoading] = useState(false);
-   const [data, setData] = useState([]);
    const [filteredProducts, setFilteredProducts] = useState([]);
    const params = useParams();
    const searchParams = useSearchParams();

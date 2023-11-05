@@ -1,6 +1,6 @@
 import { connectDB } from "@utils/database";
-import Category from "@models/Category";
 import { NextResponse } from "next/server";
+import CardProduct from "@models/CardProduct";
 import path from "path";
 import { writeFile, unlink } from "fs/promises";
 
@@ -9,47 +9,36 @@ import { writeFile, unlink } from "fs/promises";
 export const PATCH = async (req, { params }) => {
    const formData = await req.formData();
 
-   const name = formData.get("name");
-   const logoFile = formData.get("logoFile");
-   const bannerFile = formData.get("bannerFile");
-
-   if (!name || !logoFile || !bannerFile) {
+   const category = formData.get("category");
+   const selectedProduct = formData.get("name");
+   const price = formData.get("price");
+   const codes = formData.get("cardCodes");
+   const photo = formData.get("image");
+   const categoryName = formData.get("categoryName");
+   if (!category || !selectedProduct || !price || !photo) {
       return NextResponse.json(
          { error: "Missing required fields." },
          { status: 400 }
       );
    }
 
-   const bufferLogo = Buffer.from(await logoFile.arrayBuffer());
-   const filenameLogo = Date.now() + logoFile.name.replaceAll(" ", "_");
+   const bufferPhoto = Buffer.from(await photo.arrayBuffer());
+   const filenamePhoto = Date.now() + photo.name.replaceAll(" ", "_");
 
    try {
       await writeFile(
-         path.join(process.cwd(), "/public/uploads/" + filenameLogo),
-         bufferLogo
+         path.join(process.cwd(), "/public/uploads/" + filenamePhoto),
+         bufferPhoto
       );
    } catch (error) {
-      console.log("Error occured while writing logo file ", error);
-      return NextResponse.json({ Message: "Failed", status: 500 });
-   }
-
-   const bufferBanner = Buffer.from(await bannerFile.arrayBuffer());
-   const filenameBanner = Date.now() + bannerFile.name.replaceAll(" ", "_");
-
-   try {
-      await writeFile(
-         path.join(process.cwd(), "/public/uploads/" + filenameBanner),
-         bufferBanner
-      );
-   } catch (error) {
-      console.log("Error occured while writing banner file ", error);
+      console.log("Error occured while writing photo file ", error);
       return NextResponse.json({ Message: "Failed", status: 500 });
    }
 
    try {
       await connectDB();
 
-      const Existingprompt = await Category.findById(params.id);
+      const Existingprompt = await CardProduct.findById(params.id);
       console.log("Existingprompt", Existingprompt);
       console.log("params.id", params.id);
       if (!Existingprompt)
@@ -58,19 +47,15 @@ export const PATCH = async (req, { params }) => {
       // delete previous image files
       const prevLogoPath = path.join(
          process.cwd(),
-         "/public/uploads/" + Existingprompt.logoFile
+         "/public/uploads/" + Existingprompt.image
       );
-      const prevBannerPath = path.join(
-         process.cwd(),
-         "/public/uploads/" + Existingprompt.bannerFile
-      );
+
       await unlink(prevLogoPath);
-      await unlink(prevBannerPath);
 
-      Existingprompt.name = name;
-      Existingprompt.logoFile = filenameLogo;
-      Existingprompt.bannerFile = filenameBanner;
-
+      Existingprompt.name = selectedProduct;
+      Existingprompt.price = price;
+      Existingprompt.cardCodes = codes;
+      Existingprompt.image = filenamePhoto;
       await Existingprompt.save();
       return NextResponse.json({ Message: "Success", status: 201 });
    } catch (error) {
@@ -84,23 +69,19 @@ export const PATCH = async (req, { params }) => {
 export const DELETE = async (req, { params }) => {
    try {
       await connectDB();
-      const Existingprompt = await Category.findById(params.id);
+      const Existingprompt = await CardProduct.findById(params.id);
       if (!Existingprompt)
          return new Response("prompt not found", { status: 404 });
 
       // delete image files
       const prevLogoPath = path.join(
          process.cwd(),
-         "/public/uploads/" + Existingprompt.logoFile
+         "/public/uploads/" + Existingprompt.image
       );
-      const prevBannerPath = path.join(
-         process.cwd(),
-         "/public/uploads/" + Existingprompt.bannerFile
-      );
-      await unlink(prevLogoPath);
-      await unlink(prevBannerPath);
 
-      await Category.findByIdAndDelete(params.id);
+      await unlink(prevLogoPath);
+
+      await CardProduct.findByIdAndDelete(params.id);
       return new Response("prompt deleted", { status: 200 });
    } catch (error) {
       return new Response("there is problem with this fct ", { status: 500 });

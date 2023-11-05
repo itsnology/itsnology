@@ -1,24 +1,34 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { root } from "postcss";
 import React, { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
-const CardService = ({ categoryName, categoryId, productName }) => {
-   const [price, setPrice] = useState("");
-   const [codes, setCodes] = useState([]);
+const CardService = ({
+   categoryName,
+   categoryId,
+   productName,
+   editing,
+   filteredProduct,
+}) => {
+   const [price, setPrice] = useState(filteredProduct.price || "");
+   const [codes, setCodes] = useState([] || filteredProduct.cardCodes);
    const [count, setCount] = useState(0);
    const [photo, setPhoto] = useState(null);
-   const [isEditing, setIsEditing] = useState(false); // add state for editing
+   const [isEditing, setIsEditing] = useState(editing); // add state for editing
+
+   const router = useRouter();
 
    const [formData, setFormData] = useState({
-      category: categoryId,
-      categoryName: categoryName,
-      name: productName,
-      price: "",
-      cardCodes: [],
+      category: categoryId || filteredProduct.category,
+      categoryName: categoryName || filteredProduct.categoryName,
+      name: productName || filteredProduct.name,
+      price: "" || filteredProduct.price,
+      cardCodes: [] || filteredProduct.cardCodes,
       image: null,
    });
 
-   console.log(codes);
+   console.log("formData", formData);
 
    const handleAddProduct = async () => {
       const data = new FormData();
@@ -64,14 +74,18 @@ const CardService = ({ categoryName, categoryId, productName }) => {
       };
 
       try {
-         const response = await fetch(`/api/cards/editCard/${categoryId}`, {
-            // use categoryId for editing
-            method: "PATCH", // use PATCH method for editing
-            body: data,
-         });
+         const response = await fetch(
+            `/api/cards/editCat/${filteredProduct._id}`,
+            {
+               // use categoryId for editing
+               method: "PATCH", // use PATCH method for editing
+               body: data,
+            }
+         );
 
          if (response.status === 200) {
             showSuccess();
+            router.push("/admin/Product");
          } else {
             console.error("فشل تعديل المنتج");
          }
@@ -142,6 +156,22 @@ const CardService = ({ categoryName, categoryId, productName }) => {
       }
    };
 
+   // const category = filteredProduct.find((cat) => cat._id === categoryId);
+
+   // if (filteredProduct && isEditing) {
+   //    setFormData({
+   //       name: filteredProduct.name,
+   //       cardCodes: filteredProduct.cardCodes,
+   //       price: filteredProduct.price,
+   //       image: filteredProduct.image,
+   //    });
+   // }
+
+   const handleCancelEdit = () => {
+      setIsEditing(false);
+      router.push("/admin/Product");
+   };
+
    return (
       <div className="flex flex-col  justify-center py-2">
          <h1 className="text-2xl font-bold mb-4">
@@ -165,6 +195,7 @@ const CardService = ({ categoryName, categoryId, productName }) => {
                         placeholder="اسم المنتج"
                         value={formData.name}
                         onChange={handleNameChange}
+                        required
                      />
 
                      <p className="appearance-none block   bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
@@ -188,6 +219,7 @@ const CardService = ({ categoryName, categoryId, productName }) => {
                      placeholder="سعر البطاقة"
                      value={formData.price}
                      onChange={handlePriceChange}
+                     required
                   />
                </div>
             </div>
@@ -205,6 +237,7 @@ const CardService = ({ categoryName, categoryId, productName }) => {
                      type="file"
                      placeholder="صورة البطاقة"
                      onChange={handlePhotoChange}
+                     required
                   />
                </div>
             </div>
@@ -241,7 +274,7 @@ const CardService = ({ categoryName, categoryId, productName }) => {
                <button
                   type="button"
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={handleAddCode}
+                  onClick={handleAddCode} // call the function when the button is clicked
                >
                   إضافة كود
                </button>
