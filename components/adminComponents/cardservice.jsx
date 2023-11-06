@@ -35,7 +35,7 @@ const CardService = ({
       data.append("categoryName", categoryName);
       data.append("name", formData.name);
       data.append("price", formData.price);
-      data.append("cardCodes", formData.cardCodes);
+      data.append("cardCodes", JSON.stringify(codes));
       data.append("image", formData.image);
 
       const showSuccess = () => {
@@ -50,6 +50,7 @@ const CardService = ({
 
          if (response.status === 200) {
             showSuccess();
+            window.location.reload();
          } else {
             console.error("فشل إضافة المنتج");
          }
@@ -60,12 +61,13 @@ const CardService = ({
 
    const handleEditProduct = async () => {
       // add function for editing product
+
       const data = new FormData();
       data.append("category", categoryId);
       data.append("categoryName", categoryName);
       data.append("name", formData.name);
       data.append("price", formData.price);
-      data.append("cardCodes", formData.cardCodes);
+      data.append("cardCodes", JSON.stringify(codes)); // Store the array as a JSON string
       data.append("image", formData.image);
 
       const showSuccess = () => {
@@ -130,7 +132,7 @@ const CardService = ({
       setCount(count + 1); // increment count when a code is added
       setFormData({
          ...formData,
-         cardCodes: [...formData.cardCodes, ""],
+         cardCodes: [...formData.cardCodes, ""], // Update cardCodes in formData
       });
    };
 

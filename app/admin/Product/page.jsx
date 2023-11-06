@@ -59,16 +59,21 @@ const Page = () => {
       fetchCategories();
    }, []);
 
+   useEffect(() => {
+      fetchCardProducts();
+   }, [selectedCategory, selectedType]);
+
    const handleCategoryChange = (category) => {
       setSelectedCategory(category);
    };
 
-  const handleTypeChange = (type) => {
-    setSelectedType(type);
-  };
+   const handleTypeChange = (type) => {
+      setSelectedType(type);
+   };
 
    const handleSearch = () => {
       fetchCardProducts();
+      setAddProduct(false);
    };
 
    let isSocialMedia = true
@@ -136,16 +141,19 @@ const Page = () => {
    console.log("editPathname", editPathname);
    console.log("pathname", fullPathname);
 
-   useEffect(() => {
-      setFullPathnme(`${pathname}`);
-   }, [pathname]);
-
    return (
       <div className="flex md:flex-row">
          <SideBar />
-         {isEditing ? (
+         {isEditing && !isSocialMedia ? (
             <div className=" flex flex-col mr-8">
                <CardService
+                  editing={isEditing}
+                  filteredProduct={filteredProductbyid}
+               />
+            </div>
+         ) : isEditing && isSocialMedia ? (
+            <div className=" flex flex-col mr-8">
+               <SocialMedia
                   editing={isEditing}
                   filteredProduct={filteredProductbyid}
                />

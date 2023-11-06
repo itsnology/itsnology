@@ -49,31 +49,6 @@ const Page = () => {
     setShowConfirmationPopup(false);
   };
 
-  // const handleDeleteReview = async (_index, id) => {
-  //   try {
-  //     const response = await fetch("/api/Rating/DeleteRating", {
-  //       method: "DELETE",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ id }), // Pass the keyword ID to delete
-  //     });
-
-  //     if (response.ok) {
-  //       showDelete();
-
-  //       const updatedReviews = ReviewsData.filter(
-  //         (review) => review.id !== reviewToDelete.id
-  //       );
-  //       setReviewsData(updatedReviews);
-  //     } else {
-  //       console.error("Failed to delete the review");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
-
   useEffect(() => {
     const fetchReviews = async () => {
       try {
