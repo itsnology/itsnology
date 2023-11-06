@@ -11,7 +11,6 @@ const CardService = ({
    editing,
    filteredProduct,
 }) => {
-   const [price, setPrice] = useState(filteredProduct.price || "");
    const [codes, setCodes] = useState([] || filteredProduct.cardCodes);
    const [count, setCount] = useState(0);
    const [photo, setPhoto] = useState(null);
@@ -20,11 +19,11 @@ const CardService = ({
    const router = useRouter();
 
    const [formData, setFormData] = useState({
-      category: categoryId || filteredProduct.category,
-      categoryName: categoryName || filteredProduct.categoryName,
-      name: productName || filteredProduct.name,
-      price: "" || filteredProduct.price,
-      cardCodes: [] || filteredProduct.cardCodes,
+      category: categoryId || filteredProduct?.category,
+      categoryName: categoryName || filteredProduct?.categoryName,
+      name: productName || filteredProduct?.name,
+      price: "" || filteredProduct?.price,
+      cardCodes: [] || filteredProduct?.cardCodes,
       image: null,
    });
 
@@ -175,7 +174,8 @@ const CardService = ({
    return (
       <div className="flex flex-col  justify-center py-2">
          <h1 className="text-2xl font-bold mb-4">
-            {isEditing ? "تعديل" : "إضافة"} منتج لخدمات لـ {categoryName}{" "}
+            {isEditing ? "تعديل" : "إضافة"} منتج لخدمات لـ{" "}
+            {formData.categoryName}{" "}
             {/* change heading based on editing state */}
          </h1>
          <form onSubmit={handleSubmit} className="w-full max-w-lg">

@@ -143,7 +143,7 @@ const Page = () => {
    return (
       <div className="flex md:flex-row">
          <SideBar />
-         {isEditing && editPathname ? (
+         {isEditing ? (
             <div className=" flex flex-col mr-8">
                <CardService
                   editing={isEditing}
@@ -177,6 +177,7 @@ const Page = () => {
                         value={selectedCategory}
                         onChange={(e) => handleCategoryChange(e.target.value)}
                      >
+                        <option value="" disabled></option>
                         <option value="بطاقة المنتج">بطاقة المنتج</option>
                         <option value="وسائل التواصل الاجتماعي">
                            وسائل التواصل الاجتماعي
@@ -187,6 +188,7 @@ const Page = () => {
                      <label htmlFor="type" className="text-right block">
                         النوع:
                      </label>
+
                      <select
                         id="type"
                         name="type"
@@ -283,7 +285,9 @@ const Page = () => {
                               }
                               categoryName={selectedType}
                            />
-                        ) : selectedType !== "" && addProduct ? (
+                        ) : isSocialMedia === false &&
+                          selectedType !== "" &&
+                          addProduct ? (
                            <CardService
                               productName={selectedProduct}
                               categoryId={
