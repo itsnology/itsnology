@@ -63,9 +63,9 @@ const Page = () => {
       setSelectedCategory(category);
    };
 
-   const handleTypeChange = (type) => {
-      setSelectedType(type);
-   };
+  const handleTypeChange = (type) => {
+    setSelectedType(type);
+  };
 
    const handleSearch = () => {
       fetchCardProducts();

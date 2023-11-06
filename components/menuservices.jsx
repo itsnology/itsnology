@@ -8,14 +8,14 @@ import Skeleton from "./skeleton";
 const MenuService = ({ categoryData }) => {
    const [isLoading, setIsLoading] = useState(false);
 
-   return (
-      <div className=" mb-16">
-         <h1
-            className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
-            id="menu"
-         >
-            الخدمات الاكثر طلبا
-         </h1>
+  return (
+    <div className=" mb-16">
+      <h1
+        className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
+        id="menu"
+      >
+        الخدمات الاكثر طلبا
+      </h1>
 
          {isLoading ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
