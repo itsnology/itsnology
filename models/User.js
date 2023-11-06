@@ -16,6 +16,13 @@ const UserSchema = new Schema({
       required: [true, "Please provide a number"],
       unique: [true, "Number already exists"],
    },
+
+   orders: [
+      {
+         type: Schema.Types.ObjectId,
+         ref: "Order",
+      },
+   ],
 });
 
 const User = models.User || model("User", UserSchema);

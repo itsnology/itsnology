@@ -102,6 +102,25 @@ const Login = () => {
       }
    };
 
+   const checkuser = async () => {
+      const resUserExists = await fetch("api/userExists", {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ email }),
+      });
+
+      const { user } = await resUserExists.json();
+
+      if (user) {
+         setError("User already exists.");
+         router.push("/");
+      } else {
+         router.push("/register");
+      }
+   };
+
    return (
       <Fragment>
          <div

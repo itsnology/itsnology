@@ -29,19 +29,6 @@ export default function Register() {
          return;
       }
 
-      //    const result = await signIn({
-      //       email,
-      //       name,
-      //       number,
-      //    });
-
-      //    if (result.error) {
-      //       setError(result.error);
-      //    } else {
-      //       router.push("/");
-      //    }
-      // };
-
       try {
          const resUserExists = await fetch("api/userExists", {
             method: "POST",
@@ -70,12 +57,27 @@ export default function Register() {
             }),
          });
 
-         console.log("res: ", res);
-
          if (res.ok) {
             const form = e.target;
             form.reset();
-            router.push("/");
+
+            // Generate unique token
+            const token =
+               Math.random().toString(36).substring(2, 15) +
+               Math.random().toString(36).substring(2, 15);
+
+            // Set user information in sessionStorage with token
+            sessionStorage.setItem(
+               token,
+               JSON.stringify({
+                  name,
+                  email,
+                  number,
+               })
+            );
+
+            // Redirect to home page with token as query parameter
+            router.push(`/`);
          } else {
             console.log("User registration failed.");
          }

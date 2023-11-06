@@ -5,16 +5,32 @@ const socialProductSchema = new mongoose.Schema({
       type: String,
       required: true,
    },
-   description: {
-      type: String,
-      required: true,
-   },
+
    category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
    },
+   categoryName: {
+      type: String,
+      required: true,
+   },
+   description: {
+      type: String,
+      required: true,
+   },
    options: {
-      type: [String],
+      type: [
+         {
+            name: {
+               type: String,
+               required: true,
+            },
+            price: {
+               type: String,
+               required: true,
+            },
+         },
+      ],
       required: true,
    },
    image: {
@@ -23,6 +39,8 @@ const socialProductSchema = new mongoose.Schema({
    },
 });
 
-const SocialProduct = mongoose.model("SocialProduct", socialProductSchema);
+export const SocialProduct =
+   mongoose.models.SocialProduct ||
+   mongoose.model("SocialProduct", socialProductSchema);
 
 module.exports = SocialProduct;

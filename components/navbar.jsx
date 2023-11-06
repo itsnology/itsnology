@@ -4,15 +4,16 @@ import Image from "next/image";
 import Logo from "@pics/icons/Logo.png";
 import Bag from "@pics/icons/bag.png";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 
-import { useSession } from "next-auth/react";
-
-const AvatarMenu = () => {
+const AvatarMenu = ({ token }) => {
    const [state, setState] = useState(false);
    const profileRef = useRef();
 
-   const { data: session } = useSession();
+   useEffect(() => {
+      // Perform localStorage action
+
+      console.log(token);
+   }, [token]);
 
    useEffect(() => {
       const handleDropDown = (e) => {
@@ -25,13 +26,17 @@ const AvatarMenu = () => {
       };
    }, []);
 
+   const signOut = () => {
+      sessionStorage.removeItem("token");
+   };
+
    return (
       <div className="relative lg:border-none bg-slate-50">
          <div className="flex flex-row items-center">
             <button className="bg-blue-100 py-3 px-4 rounded-full me-4">
                <Image src={Bag} alt="image" />
             </button>
-            {!session?.user ? (
+            {!token ? (
                <button
                   ref={profileRef}
                   className="w-fit gradientbg px-4 py-1 flex items-center text-gray-100 h-10 outline-none rounded-full lg:block"
@@ -72,6 +77,14 @@ const submenuNav = [
 
 const Navbar = ({ onLoginClick }) => {
    const [state, setState] = useState(false);
+
+   const [token, setToken] = useState(null);
+
+   useEffect(() => {
+      // Perform localStorage action
+      const token = JSON.parse(sessionStorage.getItem("email"));
+      setToken(token);
+   }, []);
 
    return (
       <header className="text-base lg:text-sm">
@@ -153,7 +166,7 @@ const Navbar = ({ onLoginClick }) => {
                      </div>
                   </form>
 
-                  <AvatarMenu />
+                  <AvatarMenu token={token} />
                </ul>
             </div>
          </div>

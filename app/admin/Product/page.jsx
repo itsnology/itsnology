@@ -39,7 +39,10 @@ const Page = () => {
 
    const fetchCardProducts = async () => {
       try {
-         const response = await fetch(`/api/cards/${typeId}`, {
+         let endpoint = isSocialMedia
+            ? `/api/social/${typeId}`
+            : `/api/cards/${typeId}`;
+         const response = await fetch(endpoint, {
             cach: "no-store",
          });
          if (response.ok) {
@@ -53,7 +56,6 @@ const Page = () => {
          console.error("Error fetching categories:", error);
       }
    };
-
    // Call fetchCategories when your component mounts
    useEffect(() => {
       fetchCategories();
@@ -97,7 +99,10 @@ const Page = () => {
          });
 
          if (confirm.isConfirmed) {
-            const response = await fetch(`/api/cards/editCat/${productId}`, {
+            const endpoint = isSocialMedia
+               ? `/api/social/editCat/${productId}`
+               : `/api/cards/editCat/${productId}`;
+            const response = await fetch(endpoint, {
                method: "DELETE",
             });
 
@@ -289,7 +294,7 @@ const Page = () => {
                               categoryId={
                                  categoryData.find(
                                     (category) => category.name === selectedType
-                                 )?.id
+                                 )?._id
                               }
                               categoryName={selectedType}
                            />

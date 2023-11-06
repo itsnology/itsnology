@@ -29,6 +29,12 @@ const CardService = ({
 
    console.log("formData", formData);
 
+   useEffect(() => {
+      if (filteredProduct) {
+         setCodes(filteredProduct.cardCodes);
+      }
+   }, [filteredProduct]);
+
    const handleAddProduct = async () => {
       const data = new FormData();
       data.append("category", categoryId);
@@ -72,6 +78,7 @@ const CardService = ({
 
       const showSuccess = () => {
          toast.success("تم تعديل الخدمة بنجاح");
+         window.location.reload();
       };
 
       try {

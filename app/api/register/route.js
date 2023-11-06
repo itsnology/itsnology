@@ -8,7 +8,7 @@ export const POST = async (req) => {
       const { name, email, number } = await req.json();
       await User.create({ name, email, number });
 
-      return new Response("secuss", { status: 200 });
+      return new Response("secusfs", { status: 200 });
    } catch (error) {
       console.log(error);
       return new Response(JSON.stringify(error), { status: 500 });

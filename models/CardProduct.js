@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const cardProductSchema = new mongoose.Schema({
+   name: {
+      type: String,
+      required: true,
+   },
    category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
@@ -9,10 +13,7 @@ const cardProductSchema = new mongoose.Schema({
       type: String,
       required: true,
    },
-   name: {
-      type: String,
-      required: true,
-   },
+
    price: {
       type: Number,
       required: true,
