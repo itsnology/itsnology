@@ -28,10 +28,12 @@ const Popup = ({ onClose, style, product }) => {
     const emailData = {
       name: formData.name,
       email: formData.email,
-      product: product, // Send the selected product data
+      product: product,
+      
+       // Send the selected product data
     };
     try {
-      const response = await fetch("/api/SendCodes", {
+      const response = await fetch("/api/Codes/SendCodes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
