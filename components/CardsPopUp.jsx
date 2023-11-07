@@ -5,7 +5,7 @@ import { IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 
-const Popup = ({ onClose, style, product }) => {
+const Popup = ({ onClose, style, product, Token }) => {
   const showSucces = () => {
     toast.success("Message sent successfully");
   };
@@ -30,6 +30,7 @@ const Popup = ({ onClose, style, product }) => {
       name: formData.name,
       email: formData.email,
       product: product,
+      Token: Token,
 
       // Send the selected product data
     };
@@ -53,7 +54,6 @@ const Popup = ({ onClose, style, product }) => {
         }, 500);
         onClose();
       } else {
-        
         console.error("Failed to send email");
       }
     } catch (error) {

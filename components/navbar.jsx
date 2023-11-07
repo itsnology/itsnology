@@ -11,16 +11,13 @@ const AvatarMenu = () => {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    // Get data from sessionStorage
-    const user = window.sessionStorage.getItem("Token"); // Replace 'your_key' with the key you used to store the data
-
-    // Retrieve user information from session storage
-
+    const user = window.sessionStorage.getItem("Token");
     setToken(user);
     console.log(user);
   }, []);
+
   const signOut = () => {
-    sessionStorage.removeItem("152cyx6gt1ocxsflbcans8");
+    sessionStorage.removeItem("Token");
     setToken(null);
   };
 

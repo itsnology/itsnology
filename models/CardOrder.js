@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 
-const cardProductSchema = new mongoose.Schema({
+const CardOrderSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -21,14 +29,9 @@ const cardProductSchema = new mongoose.Schema({
   cardCode: {
     type: String,
   },
-  image: {
-    type: String,
-    required: true,
-  },
 });
 
-export const CardProduct =
-  mongoose.models.CardProduct ||
-  mongoose.model("CardProduct", cardProductSchema);
+export const CardOrder =
+  mongoose.models.CardOrder || mongoose.model("CardOrder", CardOrderSchema);
 
-module.exports = CardProduct;
+module.exports = CardOrder;

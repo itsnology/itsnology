@@ -6,18 +6,23 @@ import Skeleton from "@components/skeleton";
 import Navbar from "@components/navbar";
 import { useParams, useSearchParams } from "next/navigation";
 import CardsPopUp from "@components/CardsPopUp";
-
+import RegisterForm from "@components/RegisterForm";
 const Service = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   const togglePopup = () => {
     setIsOpen(!isOpen);
   };
-
   const chatPopupStyle = {
     transform: isOpen ? "translateX(0)" : "translateX(100%)",
     zIndex: isOpen ? 100 : -1,
   };
+  const [token, setToken] = useState(null);
+  console.log(token);
+  useEffect(() => {
+    const user = window.sessionStorage.getItem("Token");
+    setToken(user);
+    console.log(user);
+  }, []);
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -59,68 +64,81 @@ const Service = () => {
     togglePopup(); // Open the popup
   };
 
-   return (
-      <div className=" mb-16">
-         <Navbar />
-         <h1
-            className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
-            id="menu"
-         >
-            {filteredProducts[0]?.categoryName}
-         </h1>
+  return (
+    <div className=" mb-16">
+      {token ? ( // Conditionally render the component if the user is logged in
+        <Navbar />
+      ) : null}
 
-         {isLoading ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4">
-               {[...Array(4)].map((_, index) => (
-                  <div className="h-screen" key={index}>
-                     <Skeleton />
-                  </div>
-               ))}
-            </div>
-         ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 px-4">
-               {filteredProducts.map((item) => (
-                  <div
-                     className="flex flex-col  justify-between h-full p-4 rounded-lg shadow-lg bg-white hover:shadow-2xl  "
-                     key={item._id}
-                  >
-                     <div
-                        style={{
-                           backgroundImage: `url(/uploads/${item.image})`,
+      <h1
+        className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
+        id="menu"
+      >
+        {filteredProducts[0]?.categoryName}
+      </h1>
 
-                           backgroundSize: "cover",
-                           borderRadius: "5px",
-                        }}
-                        className="rounded-lg hover:scale-110 transition-all h-[200px] h-sm-[270px] h-md-[200px] h-lg-[270px] "
-                     ></div>
-                     <h1 className="text-xl font-bold mt-4 text-blue-700">
-                        {item.name}
-                     </h1>
-                     <h1 className="text-xl font-bold mt-4 text-green-600 ">
-                        {item.price}
-                     </h1>
-                     <button
-                        onClick={() => handleSendClick(item)}
-                        className="py-2 px-8 sm:px-6 mt-4 text-blue-700 bg-transparent border border-blue-700 rounded-full hover:bg-blue-700 hover:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-300"
-                     >
-                        اشتري الآن
-                     </button>{" "}
-                     {isOpen && selectedProduct && (
-                        <CardsPopUp
-                           onClose={() => {
-                              togglePopup();
-                              setSelectedProduct(null);
-                           }}
-                           style={chatPopupStyle}
-                           product={selectedProduct}
-                        />
-                     )}
-                  </div>
-               ))}
-            </div>
-         )}
-      </div>
-   );
+      {token ? ( // Conditionally render the component if the user is logged in
+        isLoading ? (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            {[...Array(4)].map((_, index) => (
+              <div className="h-screen" key={index}>
+                <Skeleton />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 px-4">
+            {filteredProducts.map((item) => (
+              <div
+                className="flex flex-col justify-between h-full p-4 rounded-lg shadow-lg bg-white hover:shadow-2xl"
+                key={item._id}
+              >
+                <div
+                  style={{
+                    backgroundImage: `url(/uploads/${item.image})`,
+                    backgroundSize: "cover",
+                    borderRadius: "5px",
+                  }}
+                  className="rounded-lg hover:scale-110 transition-all h-[200px] h-sm-[270px] h-md-[200px] h-lg-[270px]"
+                ></div>
+                <h1 className="text-xl font-bold mt-4 text-blue-700">
+                  {item.name}
+                </h1>
+                <h1 className="text-xl font-bold mt-4 text-green-600 ">
+                  {item.price}
+                </h1>
+                <button
+                  onClick={() => handleSendClick(item)}
+                  className="py-2 px-8 sm:px-6 mt-4 text-blue-700 bg-transparent border border-blue-700 rounded-full hover:bg-blue-700 hover:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-300"
+                >
+                  اشتري الآن
+                </button>{" "}
+                {isOpen && selectedProduct && (
+                  <CardsPopUp
+                    onClose={() => {
+                      togglePopup();
+                      setSelectedProduct(null);
+                    }}
+                    style={chatPopupStyle}
+                    product={selectedProduct}
+                    Token={token}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )
+      ) : (
+        // Render alternative content or message when the user is not logged in
+        <div>
+          <p className="text-center font-semibold text-2xl text-gray-800">
+            لم يتم تسجيل الدخول. يرجى تسجيل الدخول أولاً.
+          </p>
+          <RegisterForm />
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Service;
