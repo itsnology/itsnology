@@ -1,141 +1,126 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "@components/sidebar";
 
 const Users = () => {
-   const [expandedRow, setExpandedRow] = useState(null);
-   const users = [
-      {
-         id: 1,
-         name: "جون دو",
-         email: "johndoe@example.com",
-         number: "123-456-7890",
-         orders: [
-            {
-               id: 1,
-               name: "الطلب 1",
-               type: "النوع 1",
-               date: "2022-01-01",
-               price: 100,
-            },
-            {
-               id: 2,
-               name: "الطلب 2",
-               type: "النوع 2",
-               date: "2022-01-02",
-               price: 200,
-            },
-         ],
-      },
-      {
-         id: 2,
-         name: "جين دو",
-         email: "janedoe@example.com",
-         number: "987-654-3210",
-         orders: [
-            {
-               id: 3,
-               name: "الطلب 3",
-               type: "النوع 3",
-               date: "2022-01-03",
-               price: 300,
-            },
-            {
-               id: 4,
-               name: "الطلب 4",
-               type: "النوع 4",
-               date: "2022-01-04",
-               price: 400,
-            },
-         ],
-      },
-   ];
+  const [expandedRow, setExpandedRow] = useState(null);
+  const [UserData, setUserData] = useState([]);
 
-   const handleRowClick = (id) => {
-      if (expandedRow === id) {
-         setExpandedRow(null);
-      } else {
-         setExpandedRow(id);
+  const handleRowClick = async (id) => {
+    if (expandedRow === id) {
+      setExpandedRow(null);
+    } else {
+      setExpandedRow(id);
+
+      // Fetch the order details for the selected user
+      try {
+        const response = await fetch(`/api/GetUser/UserInfo?userId=${id}`);
+        if (response.ok) {
+          const userWithOrders = await response.json();
+          const updatedUserData = UserData.map((user) => {
+            if (user.id === id) {
+              return userWithOrders;
+            }
+            return user;
+          });
+          setUserData(updatedUserData);
+        } else {
+          console.error("Failed to fetch user orders");
+        }
+      } catch (error) {
+        console.error("Error fetching user orders:", error);
       }
-   };
+    }
+  };
 
-   return (
-      <div className="flex md:flex-row ">
-         <SideBar />
-         <div className="flex-grow p-4">
-            <table className="table-auto w-full">
-               <thead>
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("/api/GetUser/UserInfo", {
+          cache: "no-store",
+        });
+        if (response.ok) {
+          const users = await response.json();
+          setUserData(users);
+        } else {
+          console.error("Failed to fetch users");
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  return (
+    <div className="flex md:flex-row">
+      <SideBar />
+      <div className="flex-grow p-4">
+        <table className="table-auto w-full">
+          <thead>
+            <tr>
+              <th className="px-4 py-2">الاسم</th>
+              <th className="px-4 py-2">البريد الإلكتروني</th>
+              <th className="px-4 py-2">رقم الهاتف</th>
+              <th className="px-4 py-2">الطلبات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {UserData.map((user) => (
+              <div key={user.id} id={user.id}>
+                <tr
+                  className={`border-b border-gray-200 cursor-pointer ${
+                    expandedRow === user.id ? "bg-sky-200 font-bold " : ""
+                  }`}
+                  onClick={() => handleRowClick(user.id)}
+                >
+                  <td className="px-4 py-2">{user.name}</td>
+                  <td className="px-4 py-2">{user.email}</td>
+                  <td className="px-4 py-2">{user.number}</td>
+                  <td className="px-4 py-2">
+                    <button
+                      className="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => handleRowClick(user.id)}
+                    >
+                      عرض الطلبات لـ {user.name}
+                    </button>
+                  </td>
+                </tr>
+                {expandedRow === user.id && (
                   <tr>
-                     <th className="px-4 py-2">الاسم</th>
-                     <th className="px-4 py-2">البريد الإلكتروني</th>
-                     <th className="px-4 py-2">رقم الهاتف</th>
-                     <th className="px-4 py-2">الطلبات</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {users.map((user) => (
-                     <div key={user.id} id={user.id}>
-                        <tr
-                           className={`border-b border-gray-200 cursor-pointer ${
-                              expandedRow === user.id
-                                 ? "bg-sky-200 font-bold "
-                                 : ""
-                           }`}
-                           onClick={() => handleRowClick(user.id)}
-                        >
-                           <td className="px-4 py-2">{user.name}</td>
-                           <td className="px-4 py-2">{user.email}</td>
-                           <td className="px-4 py-2">{user.number}</td>
-                           <td className="px-4 py-2">
-                              <button
-                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                 onClick={() => handleRowClick(user.id)}
-                              >
-                                 عرض الطلبات لـ {user.name}
-                              </button>
-                           </td>
-                        </tr>
-                        {expandedRow === user.id && (
-                           <tr>
-                              <td colSpan="4">
-                                 <table className="table-auto w-full">
-                                    <thead>
-                                       <tr>
-                                          <th className="px-4 py-2">الاسم</th>
-                                          <th className="px-4 py-2">النوع</th>
-                                          <th className="px-4 py-2">التاريخ</th>
-                                          <th className="px-4 py-2">السعر</th>
-                                       </tr>
-                                    </thead>
-                                    <tbody>
-                                       {user.orders.map((order) => (
-                                          <tr key={order.id}>
-                                             <td className="px-4 py-2">
-                                                {order.name}
-                                             </td>
-                                             <td className="px-4 py-2">
-                                                {order.type}
-                                             </td>
-                                             <td className="px-4 py-2">
-                                                {order.date}
-                                             </td>
-                                             <td className="px-4 py-2">
-                                                {order.price}
-                                             </td>
-                                          </tr>
-                                       ))}
-                                    </tbody>
-                                 </table>
+                    <td colSpan="4">
+                      <table className="table-auto w-full">
+                        <thead>
+                          <tr>
+                            <th className="px-4 py-2">الاسم</th>
+                            <th className="px-4 py-2">النوع</th>
+                            <th className="px-4 py-2">التاريخ</th>
+                            <th className="px-4 py-2">السعر</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {user.orders.map((order) => (
+                            <tr key={order._id}>
+                              <td className="px-4 py-2">{order.name}</td>
+                              <td className="px-4 py-2">
+                                {order.categoryName}
                               </td>
-                           </tr>
-                        )}
-                     </div>
-                  ))}
-               </tbody>
-            </table>
-         </div>
+                              <td className="px-4 py-2">{order.createdTime}</td>
+                              <td className="px-4 py-2">{order.price}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                )}
+              </div>
+            ))}
+          </tbody>
+        </table>
       </div>
-   );
+    </div>
+  );
 };
 
 export default Users;

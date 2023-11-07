@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const CardOrderSchema = new mongoose.Schema({
+  productName: {
+    type: String,
+    required: true,
+  },
   username: {
     type: String,
     required: true,
@@ -9,10 +13,7 @@ const CardOrderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  name: {
-    type: String,
-    required: true,
-  },
+
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
@@ -28,6 +29,10 @@ const CardOrderSchema = new mongoose.Schema({
   },
   cardCode: {
     type: String,
+  },
+  createdTime: {
+    type: Date,
+    default: Date.now, // Set the default value to the current date and time
   },
 });
 

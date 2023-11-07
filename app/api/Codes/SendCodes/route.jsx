@@ -1,17 +1,19 @@
 import nodemailer from "nodemailer";
 import CardProduct from "@models/CardProduct";
 import CardOrder from "@models/CardOrder";
+import User from "@models/User"; // Import the User model
 
 export async function POST(request) {
   try {
     const formData = await request.json();
-    const name = formData.name;
+    const username = formData.name;
     const email = formData.email;
     const product = formData.product;
     const Token = JSON.parse(formData.Token);
+    const productName = product.name;
+
     const code = product.cardCodes;
     const id = product._id;
-    const username = Token.name;
     const usermail = Token.email;
 
     console.log(username);
@@ -43,7 +45,7 @@ export async function POST(request) {
       to: process.env.EMAIL_USER,
       subject: "Someone Order a code",
       text: `
-      Name: ${name} 
+      Name: ${username} 
       Email : ${email}
       Message text: 
       Someone Order a code`,
@@ -53,7 +55,7 @@ export async function POST(request) {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Thank you for ordering from us",
-      text: `Hello ${name}, your redeem code is: ${selectedCode}`,
+      text: `Hello ${username}, your redeem code is: ${selectedCode}`,
     };
 
     // Send the emails
@@ -73,15 +75,20 @@ export async function POST(request) {
 
     // Create a new CardOrder entry
     const cardOrder = new CardOrder({
+      productName: productName,
       username: username,
       email: usermail,
-      name: name,
       category: product.category,
       categoryName: product.categoryName,
       price: product.price,
       cardCode: selectedCode,
     });
     await cardOrder.save();
+
+    // Now, update the User's orders array
+    const user = await User.findOne({ email: usermail });
+    user.orders.push(cardOrder._id);
+    await user.save();
 
     return Response.json({ message: "Success: email was sent" });
   } catch (error) {
