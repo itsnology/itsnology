@@ -17,6 +17,7 @@ const Page = () => {
    const [isEditing, setIsEditing] = useState(false); // add state for editing
    const [filteredProductbyid, setFilteredProductById] = useState({}); // add state for editing
    const [fullPathname, setFullPathnme] = useState(pathname);
+   const [searchDisabled, setSearchDisabled] = useState(false);
 
    const fetchCategories = async () => {
       try {
@@ -61,10 +62,6 @@ const Page = () => {
       fetchCategories();
    }, []);
 
-   useEffect(() => {
-      fetchCardProducts();
-   }, [selectedCategory, selectedType]);
-
    const handleCategoryChange = (category) => {
       setSelectedCategory(category);
    };
@@ -76,6 +73,11 @@ const Page = () => {
    const handleSearch = () => {
       fetchCardProducts();
       setAddProduct(false);
+      setSearchDisabled(true);
+   };
+
+   const handleCancelSearch = () => {
+      window.location.reload();
    };
 
    let isSocialMedia = true
@@ -225,15 +227,30 @@ const Page = () => {
                </div>
                <div className="my-4">
                   <div className="flex justify-between">
+                     {searchDisabled && (
+                        <button
+                           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                           onClick={handleCancelSearch}
+                        >
+                           إلغاء البحث
+                        </button>
+                     )}
+                     {!searchDisabled && (
+                        <button
+                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                           onClick={handleSearch}
+                        >
+                           بحث
+                        </button>
+                     )}
                      <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={handleSearch}
-                     >
-                        بحث
-                     </button>
-                     <button
-                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                        className={`${
+                           searchDisabled
+                              ? "bg-gray-500 cursor-not-allowed"
+                              : "bg-green-500 hover:bg-green-700"
+                        } text-white font-bold py-2 px-4 rounded`}
                         onClick={() => setAddProduct(true)}
+                        disabled={searchDisabled}
                      >
                         إضافة
                      </button>
@@ -241,7 +258,7 @@ const Page = () => {
                   {filteredProducts.length === 0 || undefined ? (
                      <div>لا يوجد منتجات</div>
                   ) : (
-                     <div className="grid grid-cols-3 gap-4 mt-4">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                         {filteredProducts.map((product) => (
                            <div
                               key={product._id}

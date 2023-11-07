@@ -21,10 +21,10 @@ const SmallServices = ({ categoryData }) => {
                <Fragment key={index}>
                   <div className="rounded-full rounded-br-none bg-white p-2 flex justify-between items-center  ">
                      {" "}
-                     <p className="text-center  font-bold gradientx text-2xl">
+                     <p className="text-center font-semibold text-base sm:font-bold gradientx sm:text-2xl">
                         {category.name}
                      </p>
-                     <Link
+                     <a
                         href={
                            category.isSocialMedia
                               ? `/social-media/${category.name}?id=${category._id}`
@@ -40,7 +40,7 @@ const SmallServices = ({ categoryData }) => {
                               borderRadius: "50%",
                            }}
                         ></div>
-                     </Link>
+                     </a>
                   </div>
                </Fragment>
             ))}
