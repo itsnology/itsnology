@@ -172,28 +172,33 @@ const Navbar = ({ onLoginClick }) => {
                   >
                      <div className="flex items-center justify-between px-2 border rounded-full">
                         <input
+                           id="search"
                            type="text"
                            placeholder="البحث عن..."
                            className="px-2 py-2 text-gray-500 bg-transparent rounded-md outline-none"
+                           value={searchTerm}
+                           onChange={(e) => setSearchTerm(e.target.value)}
+                           autoComplete="off"
+                           onFocus={() => setIsFocused(true)}
                         />
-                        <div className="flex flex-row items-center whitespace-nowrap text-gray-600 w-fit">
-                           جميع الفئات
-                           <button onClick={() => setState(!state)}>
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 20 20"
-                                 fill="currentColor"
-                                 className="w-5 h-5 text-gray-400"
-                              >
-                                 <path
-                                    fillRule="evenodd"
-                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l4.293-4.293a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                    clipRule="evenodd"
-                                 />
-                              </svg>
-                           </button>
-                        </div>
                      </div>
+                     {isFocused && filteredCategories.length > 0 && (
+                        <div className="absolute z-10 bg-white  mt-1 rounded-md shadow-lg w-2/4">
+                           {filteredCategories.map((category) => (
+                              <Link
+                                 key={category._id}
+                                 href={
+                                    category.isSocialMedia
+                                       ? `/social-media/${category.name}?id=${category._id}`
+                                       : `/service/${category.name}?id=${category._id}`
+                                 }
+                                 className="block px-4 py-2 text-gray-800 hover:bg-gray-100  w-full"
+                              >
+                                 {category.name}
+                              </Link>
+                           ))}
+                        </div>
+                     )}
                   </form>
 
                   <AvatarMenu token={token} />
@@ -202,22 +207,25 @@ const Navbar = ({ onLoginClick }) => {
          </div>
          <nav className="border-b">
             <ul className="flex items-center gap-x-3 max-w-screen-xl mx-auto px-4 overflow-x-auto lg:px-8">
-               {submenuNav.map((item, idx) => (
-                  <li
-                     key={idx}
-                     className={`py-2 ${
-                        idx === 0 ? "w-fit text-sky-500 border-sky-600" : ""
-                     }`}
+               <li className="w-fit text-sky-500 border-sky-600">
+                  <Link
+                     href="/"
+                     className="block  whitespace-nowrap py-2 px-3 rounded-lg text-gray-700 hover:text-sky-500 focus:text-sky-500 duration-150 "
                   >
+                     الرئيسية
+                  </Link>
+               </li>
+               {categoryData.map((item, idx) => (
+                  <li key={idx} className={`py-2`}>
                      <Link
-                        href={item.path}
-                        className={`block  whitespace-nowrap py-2 px-3 rounded-lg text-gray-700 hover:text-sky-500 focus:text-sky-500 duration-150 ${
-                           idx === 0
-                              ? "w-fit text-sky-500 border-sky-600 underline underline-offset-8 decoration-[1.5px]"
-                              : ""
-                        }`}
+                        href={
+                           item.isSocialMedia
+                              ? `/social-media/${item.name}?id=${item._id}`
+                              : `/service/${item.name}?id=${item._id}`
+                        }
+                        className={`block  whitespace-nowrap py-2 px-3 rounded-lg text-gray-700 hover:text-sky-500 focus:text-sky-500 duration-150 `}
                      >
-                        {item.title}
+                        {item.name}
                      </Link>
                   </li>
                ))}

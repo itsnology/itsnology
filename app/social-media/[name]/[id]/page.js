@@ -5,7 +5,7 @@ import Login from "@components/login";
 import { useParams, useSearchParams } from "next/navigation";
 import CardsPopUp from "@components/CardsPopUp";
 
-const Product = () => {
+const Productidea = () => {
    const [isOpen, setIsOpen] = useState(false);
    const searchParams = useSearchParams();
    const typeId = searchParams.get("id");
@@ -24,7 +24,11 @@ const Product = () => {
       console.log(user);
    }, []);
 
-   const [filteredProduct, setFilteredProduct] = useState([]);
+   const [filteredProduct, setFilteredProduct] = useState([
+      {
+         options: [],
+      },
+   ]);
    console.log(filteredProduct);
 
    const params = useParams();
@@ -76,13 +80,13 @@ const Product = () => {
          <Login />
 
          <div className="flex flex-col md:flex-row items-center md:items-start justify-between bg-white rounded-lg shadow-lg overflow-hidden p-4 sm:p-32 ">
-            <div className="md:w-5/12 sm:pl-16">
+            <div className="md:w-5/12 sm:pl-16 w-full">
                <div
                   style={{
                      backgroundImage: `url(/uploads/${filteredProduct.image})`,
                      backgroundSize: "cover",
                      borderRadius: "5px",
-                     width: "300px",
+
                      height: "500px",
                   }}
                ></div>
@@ -106,7 +110,7 @@ const Product = () => {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="username"
                         type="text"
-                        placeholder="اسم المستخدم"
+                        placeholder="رابط المنشور / رابط الحساب"
                      />
                   </div>
                   <div className="mb-4">
@@ -122,9 +126,9 @@ const Product = () => {
                         id="options"
                      >
                         <option disabled>اختر الخيار</option>{" "}
-                        {filteredProduct?.options.map((option, index) => (
+                        {filteredProduct.options?.map((option, index) => (
                            <option key={index} value={option.price}>
-                              {option.name} - {option.price}
+                              {option.name} - {option.price} ريال القطري
                            </option>
                         ))}
                      </select>
@@ -145,4 +149,4 @@ const Product = () => {
    );
 };
 
-export default Product;
+export default Productidea;
