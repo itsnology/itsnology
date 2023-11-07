@@ -5,31 +5,14 @@ import SideBar from "@components/sidebar";
 const Users = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [UserData, setUserData] = useState([]);
-
+  const [OrderData, setOrderData] = useState([]);
+  console.log(OrderData);
+  console.log(UserData);
   const handleRowClick = async (id) => {
     if (expandedRow === id) {
       setExpandedRow(null);
     } else {
       setExpandedRow(id);
-
-      // Fetch the order details for the selected user
-      try {
-        const response = await fetch(`/api/GetUser/UserInfo?userId=${id}`);
-        if (response.ok) {
-          const userWithOrders = await response.json();
-          const updatedUserData = UserData.map((user) => {
-            if (user.id === id) {
-              return userWithOrders;
-            }
-            return user;
-          });
-          setUserData(updatedUserData);
-        } else {
-          console.error("Failed to fetch user orders");
-        }
-      } catch (error) {
-        console.error("Error fetching user orders:", error);
-      }
     }
   };
 
@@ -52,72 +35,109 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch(
+        `/api/GetUser/GetOrder?userId=${expandedRow}`,
+        {
+          cache: "no-store", // Corrected typo here
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+
+        setOrderData(data); // Assuming the response has a "categories" field
+      } else {
+        console.error("Failed to fetch orders");
+      }
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (expandedRow) {
+      fetchOrders(); // Fetch orders when expandedRow is set
+    }
+  }, [expandedRow]);
+
   return (
     <div className="flex md:flex-row">
       <SideBar />
-      <div className="flex-grow p-4">
-        <table className="table-auto w-full">
-          <thead>
-            <tr>
-              <th className="px-4 py-2">الاسم</th>
-              <th className="px-4 py-2">البريد الإلكتروني</th>
-              <th className="px-4 py-2">رقم الهاتف</th>
-              <th className="px-4 py-2">الطلبات</th>
-            </tr>
-          </thead>
-          <tbody>
-            {UserData.map((user) => (
-              <div key={user.id} id={user.id}>
-                <tr
-                  className={`border-b border-gray-200 cursor-pointer ${
-                    expandedRow === user.id ? "bg-sky-200 font-bold " : ""
-                  }`}
-                  onClick={() => handleRowClick(user.id)}
-                >
-                  <td className="px-4 py-2">{user.name}</td>
-                  <td className="px-4 py-2">{user.email}</td>
-                  <td className="px-4 py-2">{user.number}</td>
-                  <td className="px-4 py-2">
-                    <button
-                      className="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                      onClick={() => handleRowClick(user.id)}
-                    >
-                      عرض الطلبات لـ {user.name}
-                    </button>
-                  </td>
-                </tr>
-                {expandedRow === user.id && (
-                  <tr>
-                    <td colSpan="4">
-                      <table className="table-auto w-full">
-                        <thead>
-                          <tr>
-                            <th className="px-4 py-2">الاسم</th>
-                            <th className="px-4 py-2">النوع</th>
-                            <th className="px-4 py-2">التاريخ</th>
-                            <th className="px-4 py-2">السعر</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {user.orders.map((order) => (
-                            <tr key={order._id}>
-                              <td className="px-4 py-2">{order.name}</td>
-                              <td className="px-4 py-2">
-                                {order.categoryName}
-                              </td>
-                              <td className="px-4 py-2">{order.createdTime}</td>
-                              <td className="px-4 py-2">{order.price}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+      <div className="flex-col w-full">
+        <div className="justify-center flex lg:mt-16 md:mt-16 mb-20 mt-20 ">
+          <p className="md:text-6xl text-xl text-center font-semibold text-sky-950">
+            إدارة العملاء{" "}
+          </p>
+        </div>
+        <div className="flex-grow p-4">
+          <table className="table-auto w-full">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">الاسم</th>
+                <th className="px-4 py-2">البريد الإلكتروني</th>
+                <th className="px-4 py-2">رقم الهاتف</th>
+                <th className="px-4 py-2">الطلبات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {UserData.map((user) => (
+                <div key={user.id} id={user.id}>
+                  <tr
+                    className={`border-b border-gray-200 cursor-pointer ${
+                      expandedRow === user.id ? "bg-sky-200 font-bold " : ""
+                    }`}
+                    onClick={() => handleRowClick(user.id)}
+                  >
+                    <td className="px-4 py-2">{user.name}</td>
+                    <td className="px-4 py-2">{user.email}</td>
+                    <td className="px-4 py-2">{user.number}</td>
+                    <td className="px-4 py-2">
+                      <button
+                        className="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => handleRowClick(user.id)}
+                      >
+                        عرض الطلبات لـ {user.name}
+                      </button>
                     </td>
                   </tr>
-                )}
-              </div>
-            ))}
-          </tbody>
-        </table>
+                  {expandedRow === user.id && (
+                    <tr>
+                      <td colSpan="4">
+                        <table className="table-auto w-full">
+                          <thead>
+                            <tr>
+                              <th className="px-4 py-2">الاسم</th>
+                              <th className="px-4 py-2">النوع</th>
+                              <th className="px-4 py-2">التاريخ</th>
+                              <th className="px-4 py-2">السعر</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {OrderData.map((order) => (
+                              <tr key={order._id}>
+                                <td className="px-4 py-2">
+                                  {order.productName}
+                                </td>
+                                <td className="px-4 py-2">
+                                  {order.categoryName}
+                                </td>
+                                <td className="px-4 py-2">
+                                  {order.createdTime}
+                                </td>
+                                <td className="px-4 py-2">{order.price}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  )}
+                </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
