@@ -112,9 +112,11 @@ const Page = () => {
   return (
     <div className="flex md:flex-row">
       <SideBar />
-      <div className="flex flex-col mr-8">
-        <div className="justify-center flex lg:mt-16 md:mt-16 mb-20 mt-20 lg:mr-96 md:mr-44">
-          <p className="text-6xl font-semibold text-sky-950">إدارة ال Seo</p>
+      <div className="flex flex-col w-full mr-8">
+        <div className="justify-center flex lg:mt-16 md:mt-16 mb-20 mt-20 ">
+          <p className="md:text-6xl text-xl text-center font-semibold text-sky-950">
+            إدارة ال Seo{" "}
+          </p>
         </div>
         <div className="flex flex-col">
           <form method="POST" className="flex flex-row">

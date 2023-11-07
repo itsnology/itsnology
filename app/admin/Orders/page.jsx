@@ -89,67 +89,74 @@ const Orders = () => {
   return (
     <div className="flex md:flex-row ">
       <SideBar />
-      <div className="flex-grow p-4">
-        <table className="table-auto w-full">
-          <thead>
-            <tr>
-              <th className="px-4 py-2">المستخدم</th>
-              <th className="px-4 py-2">اسم المنتج</th>
-              <th className="px-4 py-2">الخدمة</th>
-              <th className="px-4 py-2">التاريخ</th>
-              <th className="px-4 py-2">الوقت</th>
-              <th className="px-4 py-2">السعر</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <React.Fragment key={order.id}>
-                <tr
-                  className={`border-b border-gray-200 cursor-pointer ${
-                    expandedRow === order.id ? "bg-sky-200 font-bold " : ""
-                  } ${order.done ? "bg-blue-200" : ""} ${
-                    order.category === "cards" ? "bg-rose-200" : ""
-                  }`}
-                  onClick={() => handleRowClick(order.id)}
-                >
-                  <td className="px-4 py-2">
-                    <Link
-                      href={`#${order.userId}`}
-                      className="text-blue-500 hover:underline"
-                    >
-                      {order.userName}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-2">
-                    <Link
-                      href={`/services/${order.productName}`}
-                      className="text-blue-500 hover:underline"
-                    >
-                      {order.productName}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-2">
-                    <Link href={`/services/${order.productName}`}>
-                      {order.productName}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-2">{order.date}</td>
-                  <td className="px-4 py-2">{order.time}</td>
-                  <td className="px-4 py-2">{order.price}</td>
-                  {order.category !== "cards" && (
+      <div className="w-full flex-col ">
+        <div className="justify-center flex lg:mt-16 md:mt-16 mb-20 mt-20 ">
+          <p className="md:text-6xl text-xl text-center font-semibold text-sky-950">
+            إدارة الطلبات{" "}
+          </p>
+        </div>
+        <div className="flex-grow p-4">
+          <table className="table-auto w-full">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">المستخدم</th>
+                <th className="px-4 py-2">اسم المنتج</th>
+                <th className="px-4 py-2">الخدمة</th>
+                <th className="px-4 py-2">التاريخ</th>
+                <th className="px-4 py-2">الوقت</th>
+                <th className="px-4 py-2">السعر</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <React.Fragment key={order.id}>
+                  <tr
+                    className={`border-b border-gray-200 cursor-pointer ${
+                      expandedRow === order.id ? "bg-sky-200 font-bold " : ""
+                    } ${order.done ? "bg-blue-200" : ""} ${
+                      order.category === "cards" ? "bg-rose-200" : ""
+                    }`}
+                    onClick={() => handleRowClick(order.id)}
+                  >
                     <td className="px-4 py-2">
-                      <input
-                        type="checkbox"
-                        checked={order.done}
-                        onChange={(e) => handleCheckboxClick(e, order.id)}
-                      />
+                      <Link
+                        href={`#${order.userId}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {order.userName}
+                      </Link>
                     </td>
-                  )}
-                </tr>
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+                    <td className="px-4 py-2">
+                      <Link
+                        href={`/services/${order.productName}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {order.productName}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-2">
+                      <Link href={`/services/${order.productName}`}>
+                        {order.productName}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-2">{order.date}</td>
+                    <td className="px-4 py-2">{order.time}</td>
+                    <td className="px-4 py-2">{order.price}</td>
+                    {order.category !== "cards" && (
+                      <td className="px-4 py-2">
+                        <input
+                          type="checkbox"
+                          checked={order.done}
+                          onChange={(e) => handleCheckboxClick(e, order.id)}
+                        />
+                      </td>
+                    )}
+                  </tr>
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
