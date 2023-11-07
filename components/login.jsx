@@ -10,7 +10,7 @@ import { HiAtSymbol } from "react-icons/hi";
 import { FaTimes, FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { FaRedo } from "react-icons/fa"; // Import the icon from react-icons
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, useRef } from "react";
 
 const Login = () => {
    const [otpSent, setOtpSent] = useState(false);
@@ -20,6 +20,8 @@ const Login = () => {
    const [showOtpInput, setShowOtpInput] = useState(false);
    const [counter, setCounter] = useState(30);
    const [existEmail, setExistEmail] = useState(false);
+
+   const loginPageRef = useRef();
 
    useEffect(() => {
       let intervalId;
@@ -121,6 +123,7 @@ const Login = () => {
          <div
             className="fixed inset-0 bg-gray-300 bg-opacity-50 backdrop-filter backdrop-blur-sm z-50  items-center justify-center h-screen overflow-hidden hidden"
             id="loginpage"
+            ref={loginPageRef}
          >
             {otpSent ? (
                <div className="flex flex-col p-5 w-full max-w-lg transition-all transform bg-white rounded-3xl shadow-lg">
