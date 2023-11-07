@@ -8,14 +8,14 @@ import Skeleton from "./skeleton";
 const MenuService = ({ categoryData }) => {
    const [isLoading, setIsLoading] = useState(false);
 
-  return (
-    <div className=" mb-16">
-      <h1
-        className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
-        id="menu"
-      >
-        الخدمات الاكثر طلبا
-      </h1>
+   return (
+      <div className=" mb-16">
+         <h1
+            className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
+            id="menu"
+         >
+            الخدمات الاكثر طلبا
+         </h1>
 
          {isLoading ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -32,7 +32,7 @@ const MenuService = ({ categoryData }) => {
                      className="flex flex-col items-center justify-between h-full p-4 rounded-lg shadow-lg bg-white hover:shadow-2xl  "
                      key={category._id}
                   >
-                     <Link
+                     <a
                         href={
                            category.isSocialMedia
                               ? `/social-media/${category.name}?id=${category._id}`
@@ -49,7 +49,7 @@ const MenuService = ({ categoryData }) => {
                            }}
                            className="rounded-lg hover:scale-110 transition-all"
                         ></div>
-                     </Link>
+                     </a>
                      <button className=" py-2 px-8 sm:px-6 mt-4 text-white gradientbg rounded-full hover:bg-blue-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
                         <Link
                            href={

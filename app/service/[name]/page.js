@@ -62,7 +62,7 @@ const Service = () => {
             className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
             id="menu"
          >
-            {params.name}
+            {filteredProducts[0]?.categoryName}
          </h1>
 
          {isLoading ? (
@@ -74,21 +74,20 @@ const Service = () => {
                ))}
             </div>
          ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 px-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 px-4">
                {filteredProducts.map((item) => (
                   <div
                      className="flex flex-col  justify-between h-full p-4 rounded-lg shadow-lg bg-white hover:shadow-2xl  "
-                     key={item.id}
+                     key={item._id}
                   >
                      <div
                         style={{
                            backgroundImage: `url(/uploads/${item.image})`,
-                           height: "255px",
-                           width: "200px",
+
                            backgroundSize: "cover",
                            borderRadius: "5px",
                         }}
-                        className="rounded-lg hover:scale-110 transition-all"
+                        className="rounded-lg hover:scale-110 transition-all h-[200px] h-sm-[270px] h-md-[200px] h-lg-[270px] "
                      ></div>
                      <h1 className="text-xl font-bold mt-4 text-blue-700">
                         {item.name}

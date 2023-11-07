@@ -317,8 +317,8 @@ const Page = () => {
                      <thead className="bg-gray-50 text-gray-600 font-medium border-b">
                         <tr>
                            <th className="py-3 px-6">إسم الخدمة</th>
-                           <th className="py-3 px-6"> بانر الخدمة</th>
-                           <th className="py-3 px-6">لوغو الخدمة</th>
+                           <th className="py-3 px-6"> لوغو الخدمة</th>
+                           <th className="py-3 px-6">بانر الخدمة</th>
                            <th className="py-3 px-6"></th>
                         </tr>
                      </thead>
@@ -377,9 +377,9 @@ const Page = () => {
                                     ></div>
                                  )}
                               </td>
-                              <td className="text-right px-6 whitespace-nowrap">
+                              <td className="text-right px-6 whitespace-nowrap ">
                                  {category.editingIndex === idx ? (
-                                    <>
+                                    <div className=" flex flex-col sm:flex-row">
                                        <button
                                           type="button"
                                           onClick={handleSaveChanges}
@@ -394,7 +394,7 @@ const Page = () => {
                                        >
                                           Discard Changes
                                        </button>
-                                    </>
+                                    </div>
                                  ) : (
                                     <>
                                        <button
@@ -404,14 +404,14 @@ const Page = () => {
                                           }
                                           className="bg-blue-500 text-white px-4 py-2 rounded-full me-2 focus:outline-none"
                                        >
-                                          Edit
+                                          تعديل
                                        </button>
                                        <button
                                           type="button"
                                           onClick={() => deletePrompt(category)}
                                           className="bg-red-500 text-white px-4 py-2 rounded-full focus:outline-none"
                                        >
-                                          Delete
+                                          حذف
                                        </button>
                                     </>
                                  )}
