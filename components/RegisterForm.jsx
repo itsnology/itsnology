@@ -67,7 +67,7 @@ export default function Register() {
                Math.random().toString(36).substring(2, 15);
 
             // Set user information in sessionStorage with token
-            sessionStorage.setItem(
+            localStorage.setItem(
                token,
                JSON.stringify({
                   name,

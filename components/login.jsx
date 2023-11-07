@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Fragment } from "react";
+
 import Logo from "@pics/icons/Logo.png";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +10,7 @@ import { HiAtSymbol } from "react-icons/hi";
 import { FaTimes, FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { FaRedo } from "react-icons/fa"; // Import the icon from react-icons
+import { useState, useEffect, Fragment } from "react";
 
 const Login = () => {
    const [otpSent, setOtpSent] = useState(false);
@@ -19,6 +19,7 @@ const Login = () => {
    const [verificationResult, setVerificationResult] = useState("");
    const [showOtpInput, setShowOtpInput] = useState(false);
    const [counter, setCounter] = useState(30);
+   const [existEmail, setExistEmail] = useState(false);
 
    useEffect(() => {
       let intervalId;
@@ -91,18 +92,10 @@ const Login = () => {
       }
    };
 
-   const handleVerifyOtp = () => {
+   const handleVerifyOtp = async () => {
       // Retrieve the stored OTP from local storage
       const storedOtp = localStorage.getItem("otp");
 
-      if (otp === storedOtp) {
-         router.push("/register");
-      } else {
-         setVerificationResult("Incorrect OTP");
-      }
-   };
-
-   const checkuser = async () => {
       const resUserExists = await fetch("api/userExists", {
          method: "POST",
          headers: {
@@ -113,11 +106,13 @@ const Login = () => {
 
       const { user } = await resUserExists.json();
 
-      if (user) {
-         setError("User already exists.");
-         router.push("/");
-      } else {
+      if (otp === storedOtp && !user) {
          router.push("/register");
+      } else if (otp === storedOtp && user) {
+         router.push("/");
+         document.getElementById("loginpage").classList.add("hidden");
+      } else {
+         setVerificationResult("Incorrect OTP or email does not exist");
       }
    };
 
