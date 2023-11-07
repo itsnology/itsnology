@@ -5,7 +5,7 @@ import pubgLogo from "@pics/icons/pubglogo.png";
 import Image from "next/image";
 
 import SideBar from "@components/sidebar";
-const page = () => {
+const PageAdmin = () => {
    const [expandedRow, setExpandedRow] = React.useState(null);
 
    const orders = [
@@ -187,4 +187,4 @@ const page = () => {
    );
 };
 
-export default page;
+export default PageAdmin;

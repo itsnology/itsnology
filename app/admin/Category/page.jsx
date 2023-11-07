@@ -6,7 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
 
-const Page = () => {
+const PageCat = () => {
    const [formData, setFormData] = useState({
       name: "",
       logoFile: null,
@@ -427,4 +427,4 @@ const Page = () => {
    );
 };
 
-export default Page;
+export default PageCat;
