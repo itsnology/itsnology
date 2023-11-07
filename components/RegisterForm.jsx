@@ -62,12 +62,10 @@ export default function Register() {
             form.reset();
 
             // Generate unique token
-            const token =
-               Math.random().toString(36).substring(2, 15) +
-               Math.random().toString(36).substring(2, 15);
+            const token = "Token";
 
             // Set user information in sessionStorage with token
-            localStorage.setItem(
+            sessionStorage.setItem(
                token,
                JSON.stringify({
                   name,
@@ -77,7 +75,7 @@ export default function Register() {
             );
 
             // Redirect to home page with token as query parameter
-            router.push(`/`);
+            router.push({ pathname: "/" });
          } else {
             console.log("User registration failed.");
          }

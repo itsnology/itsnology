@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import CardProduct from "@models/CardProduct";
+import CardOrder from "@models/CardOrder";
 
 export async function POST(request) {
   try {
@@ -7,10 +8,16 @@ export async function POST(request) {
     const name = formData.name;
     const email = formData.email;
     const product = formData.product;
+    const Token = JSON.parse(formData.Token);
     const code = product.cardCodes;
     const id = product._id;
-    console.log(product);
-    console.log(id);
+    const username = Token.name;
+    const usermail = Token.email;
+
+    console.log(username);
+    console.log(usermail);
+    console.log(Token);
+
     const codeIndex = 0; // Change this index to send a specific code
 
     if (codeIndex < 0 || codeIndex >= code.length) {
@@ -46,7 +53,7 @@ export async function POST(request) {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Thank you for ordering from us",
-      text: ` Hello ${name} your redeem code is : ${selectedCode}`,
+      text: `Hello ${name}, your redeem code is: ${selectedCode}`,
     };
 
     // Send the emails
@@ -63,6 +70,18 @@ export async function POST(request) {
       },
       { new: true }
     );
+
+    // Create a new CardOrder entry
+    const cardOrder = new CardOrder({
+      username: username,
+      email: usermail,
+      name: name,
+      category: product.category,
+      categoryName: product.categoryName,
+      price: product.price,
+      cardCode: selectedCode,
+    });
+    await cardOrder.save();
 
     return Response.json({ message: "Success: email was sent" });
   } catch (error) {

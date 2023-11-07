@@ -5,7 +5,7 @@ import { IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 
-const Popup = ({ onClose, style, product }) => {
+const Popup = ({ onClose, style, product, Token }) => {
   const showSucces = () => {
     toast.success("Message sent successfully");
   };
@@ -14,6 +14,7 @@ const Popup = ({ onClose, style, product }) => {
     name: "",
     email: "",
   });
+  const productname = product.name;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -29,8 +30,9 @@ const Popup = ({ onClose, style, product }) => {
       name: formData.name,
       email: formData.email,
       product: product,
-      
-       // Send the selected product data
+      Token: Token,
+
+      // Send the selected product data
     };
     try {
       const response = await fetch("/api/Codes/SendCodes", {
@@ -49,7 +51,7 @@ const Popup = ({ onClose, style, product }) => {
             name: "",
             email: "",
           });
-        }, 300);
+        }, 500);
         onClose();
       } else {
         console.error("Failed to send email");
@@ -61,21 +63,13 @@ const Popup = ({ onClose, style, product }) => {
 
   return (
     <div className="fixed bottom-0 right-0 p-4 ">
-      <button
-        onClick={onClose}
-        className="bg-blue-500 text-white px-4 py-3 rounded-full focus:outline-none"
-      >
-        <IconBrandWechat />
-      </button>
       <div
-        className="fixed bottom-0 right-0 bg-white md:w-1/2 lg:w-1/4 w-full  p-4 border shadow-lg rounded-t-lg popup-transition "
+        className="fixed bottom-20 right-10 bg-white md:w-1/2 lg:w-1/4 w-full  p-4 border shadow-lg rounded-t-lg popup-transition "
         style={style}
       >
         <div className="contact-form">
           <div className="chat-header flex justify-between items-center">
-            <span className="text-xl font-semibold">
-              للتواصل مع الدعم الفني
-            </span>
+            <span className="text-xl font-semibold">شراء {productname} </span>
             <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700 focus:outline-none"

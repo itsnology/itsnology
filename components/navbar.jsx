@@ -5,15 +5,21 @@ import Logo from "@pics/icons/Logo.png";
 import Bag from "@pics/icons/bag.png";
 import Link from "next/link";
 
-const AvatarMenu = ({ token }) => {
+const AvatarMenu = () => {
    const [state, setState] = useState(false);
    const profileRef = useRef();
+   const [token, setToken] = useState(null);
 
    useEffect(() => {
-      // Perform localStorage action
+      const user = window.sessionStorage.getItem("Token");
+      setToken(user);
+      console.log(user);
+   }, []);
 
-      console.log(token);
-   }, [token]);
+   const signOut = () => {
+      sessionStorage.removeItem("Token");
+      setToken(null);
+   };
 
    useEffect(() => {
       const handleDropDown = (e) => {
@@ -25,10 +31,6 @@ const AvatarMenu = ({ token }) => {
          document.removeEventListener("click", handleDropDown);
       };
    }, []);
-
-   const signOut = () => {
-      localStorage.removeItem("token");
-   };
 
    return (
       <div className="relative lg:border-none bg-slate-50">
@@ -170,15 +172,9 @@ const Navbar = ({ onLoginClick }) => {
                   >
                      <div className="flex items-center justify-between px-2 border rounded-full">
                         <input
-                           id="search-product"
                            type="text"
                            placeholder="البحث عن..."
                            className="px-2 py-2 text-gray-500 bg-transparent rounded-md outline-none"
-                           value={searchTerm}
-                           onChange={(e) => setSearchTerm(e.target.value)}
-                           onFocus={() => setIsFocused(true)}
-                           onBlur={() => setIsFocused(false)}
-                           autoComplete="off" // Add this line to turn off autocomplete
                         />
                         <div className="flex flex-row items-center whitespace-nowrap text-gray-600 w-fit">
                            جميع الفئات
@@ -198,23 +194,6 @@ const Navbar = ({ onLoginClick }) => {
                            </button>
                         </div>
                      </div>
-                     {isFocused && filteredCategories.length > 0 && (
-                        <div className="absolute z-10 bg-white  mt-1 rounded-md shadow-lg w-2/4">
-                           {filteredCategories.map((category) => (
-                              <Link
-                                 key={category._id}
-                                 href={
-                                    category.isSocialMedia
-                                       ? `/social-media/${category.name}?id=${category._id}`
-                                       : `/service/${category.name}?id=${category._id}`
-                                 }
-                                 className="block px-4 py-2 text-gray-800 hover:bg-gray-100  w-full"
-                              >
-                                 {category.name}
-                              </Link>
-                           ))}
-                        </div>
-                     )}
                   </form>
 
                   <AvatarMenu token={token} />
