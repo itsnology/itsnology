@@ -8,7 +8,7 @@ import styles from "@styles/Form.module.css";
 import { registerValidate } from "@lib/validate";
 import { HiAtSymbol } from "react-icons/hi";
 import { FaTimes, FaArrowLeft } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { FaRedo } from "react-icons/fa"; // Import the icon from react-icons
 import { useState, useEffect, Fragment, useRef } from "react";
 
@@ -20,6 +20,8 @@ const Login = () => {
    const [showOtpInput, setShowOtpInput] = useState(false);
    const [counter, setCounter] = useState(30);
    const [existEmail, setExistEmail] = useState(false);
+
+   const pathname = usePathname();
 
    const loginPageRef = useRef();
 
@@ -111,8 +113,18 @@ const Login = () => {
       if (otp === storedOtp && !user) {
          router.push("/register");
       } else if (otp === storedOtp && user) {
-         router.push("/");
+         router.push(pathname);
          document.getElementById("loginpage").classList.add("hidden");
+         // Generate unique token
+         const token = "Token";
+
+         // Set user information in sessionStorage with token
+         sessionStorage.setItem(
+            token,
+            JSON.stringify({
+               email,
+            })
+         );
       } else {
          setVerificationResult("Incorrect OTP or email does not exist");
       }

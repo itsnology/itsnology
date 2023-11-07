@@ -1,10 +1,19 @@
+"use client";
 import RegisterForm from "@/components/RegisterForm";
 
 import { redirect } from "next/navigation";
-import { authOptions } from "@app/api/auth/[...nextauth]/route";
+import { useState, useEffect } from "react";
 
-export default async function Register() {
-   if (session) redirect("/");
+export default function Register() {
+   const [token, setToken] = useState(null);
+
+   useEffect(() => {
+      const user = window.sessionStorage.getItem("Token");
+      setToken(user);
+      console.log(user);
+   }, []);
+
+   if (token) redirect("/");
 
    return <RegisterForm />;
 }

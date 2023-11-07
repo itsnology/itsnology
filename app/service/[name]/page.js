@@ -27,7 +27,7 @@ const Service = () => {
    const [isLoading, setIsLoading] = useState(false);
    const [data, setData] = useState([]);
    const [filteredProducts, setFilteredProducts] = useState([]);
-   console.log(filteredProducts);
+
    const params = useParams();
    const searchParams = useSearchParams();
 

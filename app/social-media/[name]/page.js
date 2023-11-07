@@ -1,82 +1,142 @@
 "use client";
-import React from "react";
-import { useParams } from "next/navigation";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import fbcrd from "@pics/cards/fbcrd.png";
+import Skeleton from "@components/skeleton";
+import Navbar from "@components/navbar";
+import { useParams, useSearchParams } from "next/navigation";
+import CardsPopUp from "@components/CardsPopUp";
+import Login from "@components/login";
+import { useRouter } from "next/navigation";
 
-const Product = () => {
+const Service = () => {
+   const [isOpen, setIsOpen] = useState(false);
+   const togglePopup = () => {
+      setIsOpen(!isOpen);
+   };
+   const chatPopupStyle = {
+      transform: isOpen ? "translateX(0)" : "translateX(100%)",
+      zIndex: isOpen ? 100 : -1,
+   };
+   const [token, setToken] = useState(null);
+   console.log(token);
+   useEffect(() => {
+      const user = window.sessionStorage.getItem("Token");
+      setToken(user);
+      console.log(user);
+   }, []);
+
+   const [isLoading, setIsLoading] = useState(false);
+   const [data, setData] = useState([]);
+   const [filteredProducts, setFilteredProducts] = useState([]);
+
    const params = useParams();
-   const data = [
-      {
-         name: params.name,
-         image: fbcrd,
-         description:
-            "وصف المنتج يمكن أن يكون هنا. وصف المنتج يمكن أن يكون هنا. وصف المنتج يمكن أن يكون هنا.",
-         options: [
-            { name: "خيار 1", price: "10 دولار" },
-            { name: "خيار 2", price: "20 دولار" },
-            { name: "خيار 3", price: "30 دولار" },
-         ],
-      },
-   ];
+   const searchParams = useSearchParams();
+
+   const typeId = searchParams.get("id");
+   const router = useRouter();
+
+   const fetchCardProducts = async () => {
+      try {
+         const response = await fetch(`/api/social/${typeId}`, {
+            cache: "no-store",
+         });
+         if (response.ok) {
+            const data = await response.json();
+
+            // Filter out products with empty CardCodes
+            const filteredData = data.filter((item) => item.options.length > 0);
+            setFilteredProducts(filteredData);
+         } else {
+            console.error("Failed to fetch categories");
+         }
+      } catch (error) {
+         console.error("Error fetching categories:", error);
+      }
+   };
+
+   useEffect(() => {
+      fetchCardProducts();
+   }, [typeId]);
+   const [selectedProduct, setSelectedProduct] = useState(null);
+
+   //? heandel
+
+   const handleSendClick = (product) => {
+      if (token) {
+         router.push(`/social-media/${params.name}/${product}`);
+      } else {
+         document.getElementById("loginpage").classList.add("flex");
+         document.getElementById("loginpage").classList.remove("hidden");
+         console.log(document.getElementById("loginpage"));
+      }
+   };
+
    return (
-      <div className="flex flex-col md:flex-row items-center md:items-start justify-between bg-white rounded-lg shadow-lg overflow-hidden p-4 sm:p-32 ">
-         <div className="md:w-5/12 sm:pl-16">
-            <Image src={data[0].image} alt="Product Image" width={500} />
-         </div>
-         <div className="p-6 md:w-7/12 ">
-            <h2 className="text-4xl font-bold mb-4  text-blue-700">
-               اسم المنتج
-            </h2>
-            <p className="text-gray-700 text-base mb-4 min-h-[11rem]  ">
-               {data[0].description}
-            </p>
-            <form>
-               <div className="mb-4">
-                  <label
-                     className="block text-gray-700 font-bold mb-2"
-                     htmlFor="username"
+      <div className=" mb-16">
+         <Navbar />
+         <Login />
+         <h1
+            className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
+            id="menu"
+         >
+            {filteredProducts[0]?.categoryName}
+         </h1>
+         {isLoading ? (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+               {[...Array(4)].map((_, index) => (
+                  <div className="h-screen" key={index}>
+                     <Skeleton />
+                  </div>
+               ))}
+            </div>
+         ) : (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 px-4">
+               {filteredProducts.map((item) => (
+                  <div
+                     className="flex flex-col justify-between h-full p-4 rounded-lg shadow-lg bg-white hover:shadow-2xl"
+                     key={item._id}
                   >
-                     اسم المستخدم على وسائل التواصل الاجتماعي
-                  </label>
-                  <input
-                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                     id="username"
-                     type="text"
-                     placeholder="اسم المستخدم"
-                  />
-               </div>
-               <div className="mb-4">
-                  <label
-                     className="block text-gray-700 font-bold mb-2"
-                     htmlFor="options"
-                  >
-                     الخيارات
-                  </label>
-                  <select
-                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                     id="options"
-                  >
-                     {data[0].options.map((option, index) => (
-                        <option key={index} value={option.price}>
-                           {option.name} - {option.price}
-                        </option>
-                     ))}
-                  </select>
-               </div>
-               <div className="flex items-center justify-center">
-                  <button
-                     className="py-2 px-8 sm:px-6 mt-4 text-blue-700 bg-transparent border border-blue-700 rounded-full hover:bg-blue-700 hover:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-300"
-                     type="button"
-                  >
-                     اشتري الآن
-                  </button>
-               </div>
-            </form>
-         </div>
+                     <div
+                        style={{
+                           backgroundImage: `url(/uploads/${item.image})`,
+                           backgroundSize: "cover",
+                           borderRadius: "5px",
+                        }}
+                        className="rounded-lg hover:scale-110 transition-all h-[200px] h-sm-[270px] h-md-[200px] h-lg-[270px]"
+                     ></div>
+                     <h1 className="text-xl font-bold mt-4 text-blue-700">
+                        {item.name}
+                     </h1>
+
+                     <form>
+                        <div className="flex items-center justify-center">
+                           <button
+                              onClick={() => handleSendClick(item._id)}
+                              className="py-2 px-8 sm:px-6 mt-4 text-blue-700 bg-transparent border border-blue-700 rounded-full hover:bg-blue-700 hover:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-300"
+                              type="button"
+                           >
+                              اشتري الآن
+                           </button>
+                        </div>
+                     </form>
+                     {isOpen && selectedProduct && (
+                        <CardsPopUp
+                           onClose={() => {
+                              togglePopup();
+                              setSelectedProduct(null);
+                           }}
+                           style={chatPopupStyle}
+                           product={selectedProduct}
+                           Token={token}
+                        />
+                     )}
+                  </div>
+               ))}
+            </div>
+         )}
       </div>
    );
 };
 
-export default Product;
+export default Service;
