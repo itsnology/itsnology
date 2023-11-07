@@ -6,6 +6,27 @@ const Users = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [UserData, setUserData] = useState([]);
   const [OrderData, setOrderData] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch("/api/GetUser/GetOrder", {
+          cache: "no-store",
+        });
+        if (response.ok) {
+          const data = await response.json();
+
+          setOrderData(data);
+        } else {
+          console.error("Failed to fetch reviews");
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+    fetchOrders();
+  }, []);
+
   console.log(OrderData);
   console.log(UserData);
   const handleRowClick = async (id) => {
@@ -114,20 +135,30 @@ const Users = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {OrderData.map((order) => (
-                              <tr key={order._id}>
-                                <td className="px-4 py-2">
-                                  {order.productName}
-                                </td>
-                                <td className="px-4 py-2">
-                                  {order.categoryName}
-                                </td>
-                                <td className="px-4 py-2">
-                                  {order.createdTime}
-                                </td>
-                                <td className="px-4 py-2">{order.price}</td>
-                              </tr>
-                            ))}
+                            {user.orders.map((userOrderID) => {
+                              const matchingOrder = OrderData.find(
+                                (order) => order._id === userOrderID
+                              );
+                              if (matchingOrder) {
+                                return (
+                                  <tr key={matchingOrder._id}>
+                                    <td className="px-4 py-2">
+                                      {matchingOrder.productName}
+                                    </td>
+                                    <td className="px-4 py-2">
+                                      {matchingOrder.categoryName}
+                                    </td>
+                                    <td className="px-4 py-2">
+                                      {matchingOrder.createdTime}
+                                    </td>
+                                    <td className="px-4 py-2">
+                                      {matchingOrder.price}
+                                    </td>
+                                  </tr>
+                                );
+                              }
+                              return null; // Handle cases where no matching order is found
+                            })}
                           </tbody>
                         </table>
                       </td>
