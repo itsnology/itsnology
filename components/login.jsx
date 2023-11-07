@@ -100,7 +100,7 @@ const Login = () => {
       // Retrieve the stored OTP from local storage
       const storedOtp = localStorage.getItem("otp");
 
-      const resUserExists = await fetch("api/userExists", {
+      const resUserExists = await fetch("/api/userExists", {
          method: "POST",
          headers: {
             "Content-Type": "application/json",
@@ -113,7 +113,7 @@ const Login = () => {
       if (otp === storedOtp && !user) {
          router.push("/register");
       } else if (otp === storedOtp && user) {
-         router.push(pathname);
+         window.location.reload();
          document.getElementById("loginpage").classList.add("hidden");
          // Generate unique token
          const token = "Token";

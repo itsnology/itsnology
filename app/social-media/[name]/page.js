@@ -64,7 +64,7 @@ const Service = () => {
 
    const handleSendClick = (product) => {
       if (token) {
-         router.push(`/social-media/${params.name}/${product}`);
+         router.push(`/social-media/${params.name}/${product}?id=${typeId}`);
       } else {
          document.getElementById("loginpage").classList.add("flex");
          document.getElementById("loginpage").classList.remove("hidden");
