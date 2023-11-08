@@ -1,18 +1,20 @@
+// pages/api/fetchCategories.js
 import { connectDB } from "@utils/database";
 import CardOrder from "@models/CardOrder";
+connectDB();
 
-export const GET = async (request) => {
+export async function GET(req, res) {
   try {
-    await connectDB();
+    const Orders = await CardOrder.find();
 
-    // Extract the userId from the request parameters
-    const userId = request.params.userId;
-
-    // Fetch orders for the specified user
-    const orders = await CardOrder.find({ username: userId });
-
-    return new Response(JSON.stringify(orders), { status: 200 });
+    return new Response(JSON.stringify(Orders), { status: 200 });
   } catch (error) {
-    return new Response("Failed to fetch orders", { status: 500 });
+    console.error(error);
+    return new Response(
+      {
+        error: "An error occurred while fetching categories",
+      },
+      500
+    );
   }
-};
+}
