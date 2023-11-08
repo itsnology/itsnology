@@ -17,11 +17,11 @@ const Productidea = () => {
       zIndex: isOpen ? 100 : -1,
    };
    const [token, setToken] = useState(null);
-   console.log(token);
+
    useEffect(() => {
-      const user = window.sessionStorage.getItem("Token");
+      const user = JSON.parse(window.sessionStorage.getItem("Token"));
       setToken(user);
-      console.log(user);
+      console.log("user name: ", user.email);
    }, []);
 
    const [filteredProduct, setFilteredProduct] = useState([
@@ -32,8 +32,6 @@ const Productidea = () => {
    console.log(filteredProduct);
 
    const params = useParams();
-
-   console.log("the params", params.id);
 
    const fetchSocialProduct = async () => {
       try {
