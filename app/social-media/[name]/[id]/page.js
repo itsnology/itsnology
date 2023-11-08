@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 import Navbar from "@components/navbar";
 import Login from "@components/login";
 import { useParams, useSearchParams } from "next/navigation";
-import CardsPopUp from "@components/CardsPopUp";
-
+import SocialPopUp from "@components/SocialPopUp";
 const Productidea = () => {
    const [isOpen, setIsOpen] = useState(false);
    const searchParams = useSearchParams();
    const typeId = searchParams.get("id");
+
    const togglePopup = () => {
       setIsOpen(!isOpen);
    };
@@ -71,6 +71,11 @@ const Productidea = () => {
    };
 
    const [selectedProduct, setSelectedProduct] = useState(null);
+   const [selectedOption, setSelectedOption] = useState(null);
+
+   const handleOptionChange = (event) => {
+      setSelectedOption(event.target.value);
+   };
 
    return (
       <>
@@ -122,10 +127,11 @@ const Productidea = () => {
                      <select
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="options"
+                        onChange={handleOptionChange}
                      >
                         <option disabled>اختر الخيار</option>{" "}
                         {filteredProduct.options?.map((option, index) => (
-                           <option key={index} value={option.price}>
+                           <option key={index} value={option.name}>
                               {option.name} - {option.price} ريال القطري
                            </option>
                         ))}
@@ -135,12 +141,24 @@ const Productidea = () => {
                      <button
                         className="py-2 px-8 sm:px-6 mt-4 text-blue-700 bg-transparent border border-blue-700 rounded-full hover:bg-blue-700 hover:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-300"
                         type="button"
-                        onClick={() => handleSendClick(filteredProduct._id)}
+                        onClick={() => handleSendClick(filteredProduct)}
                      >
                         اشتري الآن
                      </button>
                   </div>
                </form>
+               {isOpen && selectedProduct && (
+                  <SocialPopUp
+                     onClose={() => {
+                        togglePopup();
+                        setSelectedProduct(null);
+                     }}
+                     style={chatPopupStyle}
+                     product={selectedProduct}
+                     Token={token}
+                     selectedOption={selectedOption}
+                  />
+               )}
             </div>
          </div>
       </>

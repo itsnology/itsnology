@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const CardOrderSchema = new mongoose.Schema({
+const SocialOrderSchema = new mongoose.Schema({
    productName: {
       type: String,
       required: true,
@@ -20,9 +20,14 @@ const CardOrderSchema = new mongoose.Schema({
       type: Date,
       default: Date.now, // Set the default value to the current date and time
    },
+   selectedOption: {
+      type: String,
+      required: true,
+   },
 });
 
-export const CardOrder =
-   mongoose.models.CardOrder || mongoose.model("CardOrder", CardOrderSchema);
+export const SocialOrder =
+   mongoose.models.SocialOrder ||
+   mongoose.model("SocialOrder", SocialOrderSchema);
 
-module.exports = CardOrder;
+module.exports = SocialOrder;

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Skeleton from "@components/skeleton";
 import Navbar from "@components/navbar";
 import { useParams, useSearchParams } from "next/navigation";
-import CardsPopUp from "@components/CardsPopUp";
+import SocialPopUp from "@components/SocialPopUp";
 import Login from "@components/login";
 import { useRouter } from "next/navigation";
 
@@ -58,7 +58,6 @@ const Service = () => {
    useEffect(() => {
       fetchCardProducts();
    }, [typeId]);
-   const [selectedProduct, setSelectedProduct] = useState(null);
 
    //? heandel
 
@@ -120,17 +119,6 @@ const Service = () => {
                            </button>
                         </div>
                      </form>
-                     {isOpen && selectedProduct && (
-                        <CardsPopUp
-                           onClose={() => {
-                              togglePopup();
-                              setSelectedProduct(null);
-                           }}
-                           style={chatPopupStyle}
-                           product={selectedProduct}
-                           Token={token}
-                        />
-                     )}
                   </div>
                ))}
             </div>
