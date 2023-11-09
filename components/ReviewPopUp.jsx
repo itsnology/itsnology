@@ -52,13 +52,7 @@ const ReviewPopUp = ({ onClose, style }) => {
       if (response.ok) {
         showSucces();
         console.log("Email sent successfully");
-        setTimeout(() => {
-          setFormData({
-            name: "",
-            RatingStars: 0,
-            Review: "",
-          });
-        }, 300);
+        onClose();
       } else {
         console.error("Failed to send email");
       }

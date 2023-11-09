@@ -48,6 +48,7 @@ const Users = () => {
       fetchOrders();
    }, []);
 
+<<<<<<< HEAD
    console.log(OrderData);
    console.log(UserData);
    const handleRowClick = async (id) => {
@@ -93,6 +94,14 @@ const Users = () => {
       };
       fetchUsers();
    }, [OrderData, OrderSocial]);
+=======
+  
+  useEffect(() => {
+    if (expandedRow) {
+      fetchOrders(); // Fetch orders when expandedRow is set
+    }
+  }, [expandedRow]);
+>>>>>>> e23bbdc80ec9ea24c698819acd1ca95e165829fb
 
    return (
       <div className="flex md:flex-row">

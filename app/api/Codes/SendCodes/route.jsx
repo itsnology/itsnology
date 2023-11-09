@@ -1,36 +1,35 @@
 import nodemailer from "nodemailer";
 import CardProduct from "@models/CardProduct";
 import CardOrder from "@models/CardOrder";
-import User from "@models/User"; // Import the User model
+import User from "@models/User";
 
 export async function POST(request) {
   try {
     const formData = await request.json();
-    const username = formData.name;
-    const email = formData.email;
-    const product = formData.product;
-    const Token = JSON.parse(formData.Token);
-    const productName = product.name;
+    const { name: username, email, product } = formData;
+    const {
+      name: productName,
+      cardCodes,
+      _id: cardProductId,
+      category,
+      categoryName,
+      price,
+    } = product;
 
-    const code = product.cardCodes;
-    const id = product._id;
+    const Token = JSON.parse(formData.Token);
     const usermail = Token.email;
 
-    console.log(username);
-    console.log(usermail);
-    console.log(Token);
+    if (!cardCodes || cardCodes.length === 0) {
+      return Response.json({ message: "No available codes" }, 400);
+    }
 
     const codeIndex = 0; // Change this index to send a specific code
 
-    if (codeIndex < 0 || codeIndex >= code.length) {
+    if (codeIndex < 0 || codeIndex >= cardCodes.length) {
       return Response.json({ message: "Invalid code index" }, 400);
     }
 
-    if (codeIndex >= code.length) {
-      return Response.json({ message: "Invalid code index" }, 400);
-    }
-
-    const selectedCode = code[codeIndex];
+    const selectedCode = cardCodes[codeIndex];
 
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -58,34 +57,26 @@ export async function POST(request) {
       text: `Hello ${username}, your redeem code is: ${selectedCode}`,
     };
 
-    // Send the emails
     await transporter.sendMail(mailOptions);
     await transporter.sendMail(mailOptions2);
 
-    // Now, let's delete the selectedCode from the database
-    const cardProductId = id; // Make sure to send the product's _id in the formData
-
     await CardProduct.findByIdAndUpdate(
       cardProductId,
-      {
-        $pull: { cardCodes: selectedCode },
-      },
+      { $pull: { cardCodes: selectedCode } },
       { new: true }
     );
 
-    // Create a new CardOrder entry
     const cardOrder = new CardOrder({
-      productName: productName,
-      username: username,
+      productName,
+      username,
       email: usermail,
-      category: product.category,
-      categoryName: product.categoryName,
-      price: product.price,
+      category,
+      categoryName,
+      price,
       cardCode: selectedCode,
     });
     await cardOrder.save();
 
-    // Now, update the User's orders array
     const user = await User.findOne({ email: usermail });
     user.orders.push(cardOrder._id);
     await user.save();
