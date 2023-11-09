@@ -1,15 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { IconBrandWechat } from "@tabler/icons-react";
-import { IconX } from "@tabler/icons-react";
-import Image from "next/image";
+import IconX from "@tabler/icons-react";
 import toast, { Toaster } from "react-hot-toast";
 
 const Popup = ({ onClose, style, product, Token, onCardCodeSent }) => {
   const showSucces = () => {
     toast.success("Message sent successfully");
   };
-  const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
