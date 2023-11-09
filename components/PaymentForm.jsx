@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { IconX } from "@tabler/icons-react";
 
-const PaymentForm = () => {
+const PaymentForm = ({ style, onClose }) => {
   const [paymentData, setPaymentData] = useState({
     cardNumber: "",
     cardExpiryMonth: "",
@@ -69,8 +70,21 @@ const PaymentForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-6 p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold mb-4">Payment Details</h2>
+    <div
+      className="fixed bottom-20 right-10 max-w-md mx-auto mt-6 p-6 bg-white rounded-lg shadow-lg
+    "
+      style={style}
+    >
+      <div className="flex-row justify-between  flex items-center">
+        {" "}
+        <h2 className="text-2xl font-semibold mb-4">Payment Details</h2>
+        <button
+          onClick={onClose}
+          className="text-gray-500 mb-3 ml-3 hover:text-gray-700 focus:outline-none"
+        >
+          <IconX />
+        </button>
+      </div>
       <form method="POST">
         <div className="mb-4">
           <label htmlFor="cardNumber" className="block font-bold text-gray-600">

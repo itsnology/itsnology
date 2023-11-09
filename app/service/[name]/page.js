@@ -96,7 +96,7 @@ const Service = () => {
       >
         {filteredProducts[0]?.categoryName}
       </h1>
-      <PaymentForm />
+
       {isLoading ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {[...Array(4)].map((_, index) => (
@@ -133,16 +133,20 @@ const Service = () => {
                 اشتري الآن
               </button>{" "}
               {isOpen && selectedProduct && (
-                <CardsPopUp
-                  onClose={() => {
-                    togglePopup();
-                    setSelectedProduct(null);
-                  }}
+                <PaymentForm
                   style={chatPopupStyle}
-                  product={selectedProduct}
-                  Token={token}
-                  onCardCodeSent={handleCardCodeSent} // Pass a function to notify card code sent
+                  onClose={() => togglePopup()}
                 />
+                // <CardsPopUp
+                //   onClose={() => {
+                //     togglePopup();
+                //     setSelectedProduct(null);
+                //   }}
+                //   style={chatPopupStyle}
+                //   product={selectedProduct}
+                //   Token={token}
+                //   onCardCodeSent={handleCardCodeSent} // Pass a function to notify card code sent
+                // />
               )}
             </div>
           ))}
