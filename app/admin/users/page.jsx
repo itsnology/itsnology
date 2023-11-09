@@ -56,26 +56,7 @@ const Users = () => {
     fetchUsers();
   }, []);
 
-  const fetchOrders = async () => {
-    try {
-      const response = await fetch(
-        `/api/GetUser/GetOrder?userId=${expandedRow}`,
-        {
-          cache: "no-store", // Corrected typo here
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-
-        setOrderData(data); // Assuming the response has a "categories" field
-      } else {
-        console.error("Failed to fetch orders");
-      }
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    }
-  };
-
+  
   useEffect(() => {
     if (expandedRow) {
       fetchOrders(); // Fetch orders when expandedRow is set
