@@ -59,6 +59,7 @@ export async function POST(request) {
             .price,
          linkpost: link,
          selectedOption: selectedOption,
+         username: username || "Anonymous",
       });
       await socialOrder.save();
 
