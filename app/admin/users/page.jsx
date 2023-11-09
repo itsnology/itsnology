@@ -48,7 +48,6 @@ const Users = () => {
       fetchOrders();
    }, []);
 
-<<<<<<< HEAD
    console.log(OrderData);
    console.log(UserData);
    const handleRowClick = async (id) => {
@@ -94,14 +93,6 @@ const Users = () => {
       };
       fetchUsers();
    }, [OrderData, OrderSocial]);
-=======
-  
-  useEffect(() => {
-    if (expandedRow) {
-      fetchOrders(); // Fetch orders when expandedRow is set
-    }
-  }, [expandedRow]);
->>>>>>> e23bbdc80ec9ea24c698819acd1ca95e165829fb
 
    return (
       <div className="flex md:flex-row">
@@ -124,7 +115,7 @@ const Users = () => {
                   </thead>
                   <tbody>
                      {UserData.map((user) => (
-                        <div key={user._id} id={user._id}>
+                        <React.Fragment key={user._id} id={user._id}>
                            <tr
                               className={`border-b border-gray-200 cursor-pointer ${
                                  expandedRow === user._id
@@ -133,12 +124,18 @@ const Users = () => {
                               }`}
                               onClick={() => handleRowClick(user._id)}
                            >
-                              <td className="px-4 py-2">{user.name}</td>
-                              <td className="px-4 py-2">{user.email}</td>
-                              <td className="px-4 py-2">{user.number}</td>
-                              <td className="px-4 py-2">
+                              <td className="px-4 py-2 text-center">
+                                 {user.name}
+                              </td>
+                              <td className="px-4 py-2 text-center">
+                                 {user.email}
+                              </td>
+                              <td className="px-4 py-2 text-center">
+                                 {user.number}
+                              </td>
+                              <td className="px-4 py-2 text-center">
                                  <button
-                                    className="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    className="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
                                     onClick={() => handleRowClick(user.id)}
                                  >
                                     عرض الطلبات لـ {user.name}
@@ -179,22 +176,22 @@ const Users = () => {
                                              if (matchingOrder) {
                                                 return (
                                                    <tr key={matchingOrder._id}>
-                                                      <td className="px-4 py-2">
+                                                      <td className="px-4 py-2 text-center">
                                                          {
                                                             matchingOrder.productName
                                                          }
                                                       </td>
-                                                      <td className="px-4 py-2">
+                                                      <td className="px-4 py-2 text-center">
                                                          {
                                                             matchingOrder.categoryName
                                                          }
                                                       </td>
-                                                      <td className="px-4 py-2">
+                                                      <td className="px-4 py-2 text-center">
                                                          {new Date(
                                                             matchingOrder.createdTime
                                                          ).toLocaleDateString()}
                                                       </td>
-                                                      <td className="px-4 py-2">
+                                                      <td className="px-4 py-2 text-center">
                                                          {matchingOrder.price}
                                                       </td>
                                                    </tr>
@@ -207,7 +204,7 @@ const Users = () => {
                                  </td>
                               </tr>
                            )}
-                        </div>
+                        </React.Fragment>
                      ))}
                   </tbody>
                </table>
