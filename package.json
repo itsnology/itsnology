@@ -1,12 +1,13 @@
 {
-  "name": "itsnology",
+  "name": "app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://itsnology.com/",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next dev",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js"
+    "export": "next build && next export",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.8.3",

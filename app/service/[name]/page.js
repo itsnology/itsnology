@@ -1,9 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import PaymentForm from "@components/PaymentForm";
-
-import Link from "next/link";
-import Image from "next/image";
 import Skeleton from "@components/skeleton";
 import Navbar from "@components/navbar";
 import { useParams, useSearchParams } from "next/navigation";
