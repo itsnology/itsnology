@@ -143,7 +143,7 @@ export default function PaymentForm({ product, price }) {
                      email: true,
                      sms: true,
                   },
-                  redirect: "http://localhost:3000/redirect",
+                  redirect: "http://localhost:3000/",
                   // post: window.location.href,
                },
             }}
