@@ -227,18 +227,17 @@ import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
 
 export default function Register() {
+   // const [show, setShow] = useState({ password: false, cpassword: false });
    const [name, setName] = useState("");
    const [email, setEmail] = useState("");
+   // const [password, setPassword] = useState("");
    const [error, setError] = useState("");
-   const [number, setNumber] = useState("");
+   const [number, setnumber] = useState("");
    const [countryCode, setCountryCode] = useState("+1");
 
    const router = useRouter();
 
-   const [buttonClicked, setButtonClicked] = useState(false); // Set initial state to false
-
    const handleSubmit = async (e) => {
-      setButtonClicked(true);
       e.preventDefault();
 
       if (!name || !email || !number) {
@@ -247,8 +246,6 @@ export default function Register() {
       }
 
       try {
-         // Set the buttonClicked state to true
-
          const resUserExists = await fetch("api/userExists", {
             method: "POST",
             headers: {
@@ -300,8 +297,6 @@ export default function Register() {
          }
       } catch (error) {
          console.log("Error during registration: ", error);
-      } finally {
-         setButtonClicked(false); // Set the buttonClicked state back to false
       }
    };
 
@@ -320,7 +315,10 @@ export default function Register() {
          </h1>
 
          {/* form */}
-         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full sm:w-1/2">
+         <form
+            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full sm:w-1/2"
+            onSubmit={handleSubmit}
+         >
             {" "}
             <label
                className="block text-gray-700 font-bold mb-2"
@@ -408,7 +406,7 @@ export default function Register() {
                      placeholder="رقم الهاتف"
                      className={`${styles.input_text} rounded-r-md`}
                      value={number}
-                     onChange={(e) => setNumber(e.target.value)}
+                     onChange={(e) => setnumber(e.target.value)}
                      required
                   />
                </div>
@@ -421,14 +419,8 @@ export default function Register() {
             {/* {error && !cpassword ? <span className='text-rose-500'>{error}</span> : <></>} */}
             {/* login buttons */}
             <div className="input-button">
-               <button
-                  type="submit"
-                  className={`${styles.button} mt-8`}
-                  onClick={handleSubmit}
-                  disabled={buttonClicked}
-                  // Disable the button when it's clicked
-               >
-                  {buttonClicked ? "إنتظر قليلا..." : "تسجيل"}
+               <button type="submit" className={`${styles.button} mt-8`}>
+                  تسجيل
                </button>
             </div>
          </form>
