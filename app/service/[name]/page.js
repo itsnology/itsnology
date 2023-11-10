@@ -133,20 +133,21 @@ const Service = () => {
                         اشتري الآن
                      </button>{" "}
                      {isOpen && selectedProduct && (
-                        // <PaymentForm
-                        //   style={chatPopupStyle}
-                        //   onClose={() => togglePopup()}
-                        // />
-                        <CardsPopUp
-                           onClose={() => {
-                              togglePopup();
-                              setSelectedProduct(null);
-                           }}
+                        <PaymentForm
                            style={chatPopupStyle}
-                           product={selectedProduct}
-                           Token={token}
-                           onCardCodeSent={handleCardCodeSent} // Pass a function to notify card code sent
+                           onClose={() => togglePopup()}
+                           product={item}
                         />
+                        // <CardsPopUp
+                        //    onClose={() => {
+                        //       togglePopup();
+                        //       setSelectedProduct(null);
+                        //    }}
+                        //    style={chatPopupStyle}
+                        //    product={selectedProduct}
+                        //    Token={token}
+                        //    onCardCodeSent={handleCardCodeSent} // Pass a function to notify card code sent
+                        // />
                      )}
                   </div>
                ))}
