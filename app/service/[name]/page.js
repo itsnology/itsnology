@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import PaymentForm from "@components/PaymentForm";
+import { GoSell } from "@tap-payments/gosell";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -15,6 +16,14 @@ const Service = () => {
    const togglePopup = () => {
       setIsOpen(!isOpen);
    };
+
+   useEffect(() => {
+      GoSell.showResult({
+         callback: (response) => {
+            console.log("callback", response);
+         },
+      });
+   }, []);
 
    const chatPopupStyle = {
       transform: isOpen ? "translateX(0)" : "translateX(100%)",
@@ -90,6 +99,7 @@ const Service = () => {
       <div className=" mb-16">
          <Navbar />
          <Login />
+         <GoSell />
          <h1
             className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
             id="menu"
@@ -137,6 +147,7 @@ const Service = () => {
                            style={chatPopupStyle}
                            onClose={() => togglePopup()}
                            product={item}
+                           price={item.price}
                         />
                         // <CardsPopUp
                         //    onClose={() => {

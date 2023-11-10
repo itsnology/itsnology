@@ -4,11 +4,26 @@ import Navbar from "@components/navbar";
 import Login from "@components/login";
 import { useParams, useSearchParams } from "next/navigation";
 import SocialPopUp from "@components/SocialPopUp";
+import { GoSell } from "@tap-payments/gosell";
+import PaymentForm from "@components/PaymentForm";
 const Productidea = () => {
    const [isOpen, setIsOpen] = useState(false);
    const searchParams = useSearchParams();
    const typeId = searchParams.get("id");
+   const [dataFromChild, setDataFromChild] = useState(null);
 
+   useEffect(() => {
+      GoSell.showResult({
+         callback: (response) => {
+            console.log("callback", response);
+            setDataFromChild(response);
+         },
+      });
+   }, []);
+
+   console.log("dataFromChild", dataFromChild);
+
+   console.log(dataFromChild);
    const togglePopup = () => {
       setIsOpen(!isOpen);
    };
@@ -81,8 +96,8 @@ const Productidea = () => {
       <>
          <Navbar />
          <Login />
-
-         <div className="flex flex-col md:flex-row items-center md:items-start justify-between bg-white rounded-lg shadow-lg overflow-hidden p-4 sm:p-32 ">
+         <GoSell />
+         <div className="flex flex-col md:flex-row items-center md:items-start justify-between bg-white rounded-lg shadow-lg overflow-hidden p-4 md:p-32 ">
             <div className="md:w-5/12 sm:pl-16 w-full">
                <div
                   style={{
@@ -148,15 +163,26 @@ const Productidea = () => {
                   </div>
                </form>
                {isOpen && selectedProduct && (
-                  <SocialPopUp
-                     onClose={() => {
-                        togglePopup();
-                        setSelectedProduct(null);
-                     }}
+                  // <SocialPopUp
+                  //    onClose={() => {
+                  //       togglePopup();
+                  //       setSelectedProduct(null);
+                  //    }}
+                  //    style={chatPopupStyle}
+                  //    product={selectedProduct}
+                  //    Token={token}
+                  //    selectedOption={selectedOption}
+                  // />
+
+                  <PaymentForm
                      style={chatPopupStyle}
-                     product={selectedProduct}
-                     Token={token}
-                     selectedOption={selectedOption}
+                     onClose={() => togglePopup()}
+                     product={filteredProduct}
+                     price={
+                        filteredProduct.options.find(
+                           (option) => option.name === selectedOption
+                        )?.price
+                     }
                   />
                )}
             </div>
