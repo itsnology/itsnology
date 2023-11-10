@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import  IconX  from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import StarRatings from "react-star-ratings";
 
 const ReviewPopUp = ({ onClose, style }) => {

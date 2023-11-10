@@ -23,6 +23,7 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setButtonClicked(true);
 
     if (!name || !email || !number) {
       setError("All fields are necessary.");
@@ -30,8 +31,6 @@ export default function Register() {
     }
 
     try {
-      setButtonClicked(true);
-
       // Set the buttonClicked state to true
 
       const resUserExists = await fetch("api/userExists", {
@@ -204,8 +203,7 @@ export default function Register() {
             disabled={buttonClicked}
             // Disable the button when it's clicked
           >
-            {" "}
-            إنتظر قليلا..
+            {buttonClicked ? "إنتظر قليلا..." : "تسجيل"}
           </button>
         </div>
       </form>

@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import IconX from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import toast, { Toaster } from "react-hot-toast";
 
 const Popup = ({ onClose, style, product, Token, onCardCodeSent }) => {
-  const showSucces = () => {
-    toast.success("Message sent successfully");
-  };
+  const [buttonClicked, setButtonClicked] = useState(false); // Set initial state to false
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,6 +21,8 @@ const Popup = ({ onClose, style, product, Token, onCardCodeSent }) => {
   };
 
   const handleSubmit = async (e) => {
+    setButtonClicked(true);
+
     e.preventDefault();
     const emailData = {
       name: formData.name,
@@ -41,7 +42,6 @@ const Popup = ({ onClose, style, product, Token, onCardCodeSent }) => {
       });
 
       if (response.ok) {
-        showSucces();
         onClose();
         onCardCodeSent();
       } else {
@@ -108,8 +108,9 @@ const Popup = ({ onClose, style, product, Token, onCardCodeSent }) => {
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-full focus:outline-none"
+              disabled={buttonClicked}
             >
-              ارسال
+              {buttonClicked ? "إنتظر قليلا..." : "ارسال"}
             </button>
             <Toaster />
           </form>

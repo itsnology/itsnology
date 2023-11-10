@@ -4,11 +4,17 @@ import React, { useState, useEffect } from "react";
 import SideBar from "@components/sidebar";
 import { IconX } from "@tabler/icons-react";
 import toast, { Toaster } from "react-hot-toast";
+import Adminlogin from "@components/adminlogin";
 
 const PageLook = () => {
    const [formData, setFormData] = useState({
       name: "",
    });
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const submitLogin = async (e) => {
+    setLoggedIn(true);
+  };
 
    const [keywords, setKeywords] = useState([]); // To store the uploaded keywords
 
@@ -110,60 +116,62 @@ const PageLook = () => {
    };
 
    return (
-      <div className="flex md:flex-row">
-         <SideBar />
-         <div className="flex flex-col w-full mr-8">
-            <div className="justify-center flex lg:mt-16 md:mt-16 mb-20 mt-20 ">
-               <p className="md:text-6xl text-xl text-center font-semibold text-sky-950">
-                  إدارة ال Seo{" "}
-               </p>
-            </div>
-            <div className="flex flex-col">
-               <form method="POST" className="flex flex-row">
-                  <div className="flex flex-col">
-                     <label
-                        htmlFor="name"
-                        className="block text-sm mb-2 font-medium text-gray-700"
-                     >
-                        الكلمة المفتاحية:
-                     </label>
-                     <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ name: e.target.value })}
-                        className="w-full p-2 border rounded-full focus:outline-blue-400"
-                        required
-                     />
-                  </div>
-                  <button
-                     onClick={handleSubmit}
-                     className="px-6 py-3 mt-6 mr-3 font-medium hover:bg-slate-700 rounded-full bg-slate-800 text-cyan-50"
-                  >
-                     إضافة
-                  </button>
-                  <Toaster />
-               </form>
-               <div className="flex flex-wrap mt-12">
-                  {keywords.map((keyword, index) => (
-                     <div className="relative mb-5 ml-6" key={index}>
-                        <p className="text-gray-600 font-medium p-4 rounded-md bg-gray-200 relative">
-                           {keyword.name}
-                        </p>
-                        <IconX
-                           className="w-4 h-4 absolute top-1 right-1 text-gray-700 hover:text-red-500 cursor-pointer"
-                           onClick={() =>
-                              handleDeleteKeyword(index, keyword.id)
-                           } // Pass the 'id' parameter
-                        />
-                        <Toaster />
-                     </div>
-                  ))}
-               </div>
-            </div>
+     <div className="flex md:flex-row">
+       <SideBar />
+       <div className="flex flex-col w-full mr-8">
+         <div className="justify-center flex lg:mt-16 md:mt-16 mb-20 mt-20 ">
+           <p className="md:text-6xl text-2xl text-center font-semibold text-sky-950">
+             إدارة ال Seo{" "}
+           </p>
          </div>
-      </div>
+         {loggedIn ? (
+           <div className="flex flex-col">
+             <form method="POST" className="flex flex-row">
+               <div className="flex flex-col">
+                 <label
+                   htmlFor="name"
+                   className="block text-sm mb-2 font-medium text-gray-700"
+                 >
+                   الكلمة المفتاحية:
+                 </label>
+                 <input
+                   type="text"
+                   id="name"
+                   name="name"
+                   value={formData.name}
+                   onChange={(e) => setFormData({ name: e.target.value })}
+                   className="w-full p-2 border rounded-full focus:outline-blue-400"
+                   required
+                 />
+               </div>
+               <button
+                 onClick={handleSubmit}
+                 className="px-6 py-3 mt-6 mr-3 font-medium hover:bg-slate-700 rounded-full bg-slate-800 text-cyan-50"
+               >
+                 إضافة
+               </button>
+               <Toaster />
+             </form>
+             <div className="flex flex-wrap mt-12">
+               {keywords.map((keyword, index) => (
+                 <div className="relative mb-5 ml-6" key={index}>
+                   <p className="text-gray-600 font-medium p-4 rounded-md bg-gray-200 relative">
+                     {keyword.name}
+                   </p>
+                   <IconX
+                     className="w-4 h-4 absolute top-1 right-1 text-gray-700 hover:text-red-500 cursor-pointer"
+                     onClick={() => handleDeleteKeyword(index, keyword.id)} // Pass the 'id' parameter
+                   />
+                   <Toaster />
+                 </div>
+               ))}
+             </div>
+           </div>
+         ) : (
+           <Adminlogin login={submitLogin} />
+         )}
+       </div>
+     </div>
    );
 };
 

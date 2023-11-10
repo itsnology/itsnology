@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import IconX from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 
 const PaymentForm = ({ style, onClose }) => {
    const [paymentData, setPaymentData] = useState({
