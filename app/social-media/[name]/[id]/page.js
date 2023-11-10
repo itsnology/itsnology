@@ -34,7 +34,7 @@ const Productidea = () => {
    const [token, setToken] = useState(null);
 
    useEffect(() => {
-      const user = JSON.parse(window.sessionStorage.getItem("Token"));
+      const user = window.sessionStorage.getItem("Token");
       setToken(user);
       console.log("user name: ", user.email);
    }, []);
