@@ -163,8 +163,8 @@ const PageAdmin = () => {
                               </Link>
                             </td>
                             <td className="px-4 py-2">
-                              <Link href={`/services/${order.productName}`}>
-                                {order.productName}
+                              <Link href={`/services/${order.categoryName}`}>
+                                {order.categoryName}
                               </Link>
                             </td>
                             <td className="px-4 py-2">
