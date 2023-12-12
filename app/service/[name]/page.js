@@ -126,10 +126,9 @@ const Service = () => {
                         <Image src={Lock} alt="lock" width={128} height={128} />
                      </div>
                      <div className="mt-4 text-center">
-                        <p className="text-3xl font-semibold">Locked Level</p>
+                        <p className="text-3xl font-semibold">منتجات فارغة</p>
                         <p className="mt-2 mb-16">
-                           You have to complete the previous level to unlock
-                           this one.
+                           لا توجد منتجات متاحة حاليًا.
                         </p>
                      </div>{" "}
                   </div>
