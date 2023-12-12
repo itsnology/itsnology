@@ -11,6 +11,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import CardsPopUp from "@components/CardsPopUp";
 import ReviewPopUp from "@components/ReviewPopUp";
 import Login from "@components/login";
+import Lock from "@pics/icons/Lock.png";
 const Service = () => {
    const [isOpen, setIsOpen] = useState(false);
    const togglePopup = () => {
@@ -100,6 +101,7 @@ const Service = () => {
          <Navbar />
          <Login />
          <GoSell />
+
          <h1
             className="text-4xl font-bold  mt-16 mb-4 text-center gradientx h-14"
             id="menu"
@@ -116,54 +118,73 @@ const Service = () => {
                ))}
             </div>
          ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 px-4">
-               {filteredProducts.map((item) => (
-                  <div
-                     className="flex flex-col justify-between h-full p-4 rounded-lg shadow-lg bg-white hover:shadow-2xl"
-                     key={item._id}
-                  >
-                     <div
-                        style={{
-                           backgroundImage: `url(/uploads/${item.image})`,
-                           backgroundSize: "cover",
-                           borderRadius: "5px",
-                        }}
-                        className="rounded-lg hover:scale-110 transition-all h-[200px] h-sm-[270px] h-md-[200px] h-lg-[270px]"
-                     ></div>
-                     <h1 className="text-xl font-bold mt-4 text-blue-700">
-                        {item.name}
-                     </h1>
-                     <h1 className="text-xl font-bold mt-4 text-green-600 ">
-                        {item.price}
-                     </h1>
-                     <button
-                        onClick={() => handleSendClick(item)}
-                        className="py-2 px-8 sm:px-6 mt-4 text-blue-700 bg-transparent border border-blue-700 rounded-full hover:bg-blue-700 hover:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-300"
-                     >
-                        اشتري الآن
-                     </button>{" "}
-                     {isOpen && selectedProduct && (
-                        // <PaymentForm
-                        //    style={chatPopupStyle}
-                        //    onClose={() => togglePopup()}
-                        //    product={item}
-                        //    price={item.price}
-                        // />
-                        <CardsPopUp
-                           onClose={() => {
-                              togglePopup();
-                              setSelectedProduct(null);
-                           }}
-                           style={chatPopupStyle}
-                           product={selectedProduct}
-                           Token={token}
-                           onCardCodeSent={handleCardCodeSent} // Pass a function to notify card code sent
-                        />
-                     )}
+            <>
+               {filteredProducts.length === 0 ? (
+                  <div className=" rounded-lg  p-4 my-32 w-full  bg-opacity-50 flex items-center justify-center flex-col">
+                     <div className="flex items-center justify-center">
+                        {/* <IconLock size={48} className=" text-blue-600" /> */}
+                        <Image src={Lock} alt="lock" width={128} height={128} />
+                     </div>
+                     <div className="mt-4 text-center">
+                        <p className="text-3xl font-semibold">Locked Level</p>
+                        <p className="mt-2 mb-16">
+                           You have to complete the previous level to unlock
+                           this one.
+                        </p>
+                     </div>{" "}
                   </div>
-               ))}
-            </div>
+               ) : (
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 px-4">
+                     {filteredProducts.map((item) => (
+                        <div
+                           className="flex flex-col justify-between h-full p-4 rounded-lg  bg-white hover:shadow-2xl"
+                           key={item._id}
+                        >
+                           <div
+                              style={{
+                                 backgroundImage: `url(/uploads/${item.image})`,
+                                 backgroundSize: "cover",
+                                 borderRadius: "5px",
+                              }}
+                              className="rounded-lg hover:scale-110 transition-all h-[200px] h-sm-[270px] h-md-[200px] h-lg-[270px]"
+                           ></div>
+                           <h1 className="text-xl font-bold mt-4 text-blue-700">
+                              {item.name}
+                           </h1>
+                           <h1 className="text-xl font-bold mt-4 text-green-600 ">
+                              {item.price}
+                           </h1>
+                           <button
+                              onClick={() => handleSendClick(item)}
+                              className="py-2 px-8 sm:px-6 mt-4 text-blue-700 bg-transparent border border-blue-700 rounded-full hover:bg-blue-700 hover:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-300"
+                           >
+                              اشتري الآن
+                           </button>{" "}
+                           {isOpen && selectedProduct && (
+                              <PaymentForm
+                                 style={chatPopupStyle}
+                                 onClose={() => togglePopup()}
+                                 product={item}
+                                 price={item.price}
+                              />
+                              // <CardsPopUp
+                              //    onClose={() => {
+                              //       togglePopup();
+                              //       setSelectedProduct(null);
+                              //    }}
+                              //    style={chatPopupStyle}
+                              //    product={selectedProduct}
+                              //    Token={token}
+                              //    onCardCodeSent={handleCardCodeSent} // Pass a function to notify card code sent
+                              // />
+                           )}
+                        </div>
+                     ))}{" "}
+                  </div>
+               )}
+            </>
          )}
+
          {showReviewPopup && (
             <ReviewPopUp
                onClose={() => setShowReviewPopup(false)}

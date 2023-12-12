@@ -13,37 +13,43 @@ export const PATCH = async (req, { params }) => {
    const logoFile = formData.get("logoFile");
    const bannerFile = formData.get("bannerFile");
 
-   if (!name || !logoFile || !bannerFile) {
+   if (!name) {
       return NextResponse.json(
          { error: "Missing required fields." },
          { status: 400 }
       );
    }
 
-   const bufferLogo = Buffer.from(await logoFile.arrayBuffer());
-   const filenameLogo = Date.now() + logoFile.name.replaceAll(" ", "_");
+   let filenameLogo = "";
+   if (logoFile) {
+      const bufferLogo = Buffer.from(await logoFile.arrayBuffer());
+      filenameLogo = Date.now() + logoFile.name.replaceAll(" ", "_");
 
-   try {
-      await writeFile(
-         path.join(process.cwd(), "/public/uploads/" + filenameLogo),
-         bufferLogo
-      );
-   } catch (error) {
-      console.log("Error occured while writing logo file ", error);
-      return NextResponse.json({ Message: "Failed", status: 500 });
+      try {
+         await writeFile(
+            path.join(process.cwd(), "/public/uploads/" + filenameLogo),
+            bufferLogo
+         );
+      } catch (error) {
+         console.log("Error occurred while writing logo file ", error);
+         return NextResponse.json({ Message: "Failed", status: 500 });
+      }
    }
 
-   const bufferBanner = Buffer.from(await bannerFile.arrayBuffer());
-   const filenameBanner = Date.now() + bannerFile.name.replaceAll(" ", "_");
+   let filenameBanner = "";
+   if (bannerFile) {
+      const bufferBanner = Buffer.from(await bannerFile.arrayBuffer());
+      filenameBanner = Date.now() + bannerFile.name.replaceAll(" ", "_");
 
-   try {
-      await writeFile(
-         path.join(process.cwd(), "/public/uploads/" + filenameBanner),
-         bufferBanner
-      );
-   } catch (error) {
-      console.log("Error occured while writing banner file ", error);
-      return NextResponse.json({ Message: "Failed", status: 500 });
+      try {
+         await writeFile(
+            path.join(process.cwd(), "/public/uploads/" + filenameBanner),
+            bufferBanner
+         );
+      } catch (error) {
+         console.log("Error occurred while writing banner file ", error);
+         return NextResponse.json({ Message: "Failed", status: 500 });
+      }
    }
 
    try {
@@ -55,26 +61,31 @@ export const PATCH = async (req, { params }) => {
       if (!Existingprompt)
          return new Response("prompt not found", { status: 404 });
 
-      // delete previous image files
-      const prevLogoPath = path.join(
-         process.cwd(),
-         "/public/uploads/" + Existingprompt.logoFile
-      );
-      const prevBannerPath = path.join(
-         process.cwd(),
-         "/public/uploads/" + Existingprompt.bannerFile
-      );
-      await unlink(prevLogoPath);
-      await unlink(prevBannerPath);
+      // delete previous image files if new files are provided
+      if (filenameLogo && Existingprompt.logoFile) {
+         const prevLogoPath = path.join(
+            process.cwd(),
+            "/public/uploads/" + Existingprompt.logoFile
+         );
+         await unlink(prevLogoPath);
+      }
+
+      if (filenameBanner && Existingprompt.bannerFile) {
+         const prevBannerPath = path.join(
+            process.cwd(),
+            "/public/uploads/" + Existingprompt.bannerFile
+         );
+         await unlink(prevBannerPath);
+      }
 
       Existingprompt.name = name;
-      Existingprompt.logoFile = filenameLogo;
-      Existingprompt.bannerFile = filenameBanner;
+      if (filenameLogo) Existingprompt.logoFile = filenameLogo;
+      if (filenameBanner) Existingprompt.bannerFile = filenameBanner;
 
       await Existingprompt.save();
       return NextResponse.json({ Message: "Success", status: 201 });
    } catch (error) {
-      console.log("Error occured while saving to database ", error);
+      console.log("Error occurred while saving to database ", error);
       return NextResponse.json({ Message: "Failed", status: 500 });
    }
 };
@@ -89,16 +100,21 @@ export const DELETE = async (req, { params }) => {
          return new Response("prompt not found", { status: 404 });
 
       // delete image files
-      const prevLogoPath = path.join(
-         process.cwd(),
-         "/public/uploads/" + Existingprompt.logoFile
-      );
-      const prevBannerPath = path.join(
-         process.cwd(),
-         "/public/uploads/" + Existingprompt.bannerFile
-      );
-      await unlink(prevLogoPath);
-      await unlink(prevBannerPath);
+      if (Existingprompt.logoFile) {
+         const prevLogoPath = path.join(
+            process.cwd(),
+            "/public/uploads/" + Existingprompt.logoFile
+         );
+         await unlink(prevLogoPath);
+      }
+
+      if (Existingprompt.bannerFile) {
+         const prevBannerPath = path.join(
+            process.cwd(),
+            "/public/uploads/" + Existingprompt.bannerFile
+         );
+         await unlink(prevBannerPath);
+      }
 
       await Category.findByIdAndDelete(params.id);
       return new Response("prompt deleted", { status: 200 });

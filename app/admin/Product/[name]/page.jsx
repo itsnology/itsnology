@@ -244,7 +244,6 @@ const ProName = () => {
                         name="لوغو الخدمة"
                         onChange={handleLogoUpload}
                         className="w-64 p-2 border rounded-full focus:outline-blue-400"
-                        required
                      />
                   </div>
 
@@ -260,7 +259,6 @@ const ProName = () => {
                         id="banner"
                         name="بانر الخدمة"
                         onChange={handleBannerUpload}
-                        required
                         className="w-64 p-2 border rounded-full focus:outline-blue-400"
                      />
                   </div>
